@@ -15,9 +15,8 @@ import javax.swing.JLabel;
  *
  * @author David
  */
-public class ventanaLogs {
-    
-    public ventanaLogs(){
+public class ventanaOponentes {
+    public ventanaOponentes(){
         JFrame screen = new JFrame();
         screen.setSize(800, 600);  //Tamaño standard para menus
         screen.setResizable(false);
@@ -26,7 +25,7 @@ public class ventanaLogs {
         screen.setLayout(null);
         
         
-        JLabel titulo = new JLabel("LOGS DE PARTIDAS");
+        JLabel titulo = new JLabel("SELECCIONE SU OPONENTE");
         titulo.setBounds(100, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
         
@@ -39,7 +38,7 @@ public class ventanaLogs {
           @Override 
           public void actionPerformed(ActionEvent e){
               screen.dispose();
-             menuReportes ventana = new menuReportes();
+             menuPrincipal ventana = new menuPrincipal();
           }
                     
         });
@@ -51,7 +50,9 @@ public class ventanaLogs {
         screen.setVisible(true);
     }
     
+    
+    
     public static void main(String[] args) {
-        ventanaLogs ventana = new ventanaLogs();
+        ventanaOponentes ventana = new ventanaOponentes();
     }
 }

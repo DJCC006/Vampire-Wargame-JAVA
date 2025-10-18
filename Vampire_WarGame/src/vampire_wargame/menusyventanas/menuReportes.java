@@ -10,16 +10,14 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import vampire_wargame.menusyventanas.menuInicial;
 
 /**
  *
  * @author David
  */
-public class menuPrincipal {
-      //Creacion de JFrame y demas elementos
-    public menuPrincipal(){
+public class menuReportes {
     
+    public menuReportes(){
         JFrame screen = new JFrame();
         screen.setSize(800, 600);  //Tamaño standard para menus
         screen.setResizable(false);
@@ -28,18 +26,19 @@ public class menuPrincipal {
         screen.setLayout(null);
         
         
-        JLabel titulo = new JLabel("MENU PRINCIPAL");
+        JLabel titulo = new JLabel("MENU REPORTES");
         titulo.setBounds(150, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
         
-        JButton btPlay = new JButton("Jugar VAMPIRE WARGAME");
-        btPlay.setBounds(300, 180, 200, 50);
         
-        btPlay.addActionListener(new ActionListener(){
+        JButton btRanking = new JButton("Ranking de Jugadores");
+        btRanking.setBounds(300, 180, 200, 50);
+        
+        btRanking.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
               screen.dispose();
-              ventanaOponentes ventana = new ventanaOponentes();
+              ventanaRanking ventana = new ventanaRanking();
              
           }
                     
@@ -47,57 +46,44 @@ public class menuPrincipal {
         
         
         
-        JButton btAccount = new JButton("MI Perfil");
-        btAccount.setBounds(300, 250, 200, 50);
+        JButton btLogs = new JButton("Logs de Partidas");
+        btLogs.setBounds(300, 250, 200, 50);
         
-        btAccount.addActionListener(new ActionListener(){
+        btLogs.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
               screen.dispose();
-              ventanaPerfil ventana = new ventanaPerfil();
+              ventanaLogs ventana = new ventanaLogs();
           }
                     
         });
         
         
         
-        JButton btReportes = new JButton("Reportes");
-        btReportes.setBounds(300, 320, 200, 50);
         
-        btReportes.addActionListener(new ActionListener(){
-          @Override 
-          public void actionPerformed(ActionEvent e){
-              screen.dispose();
-             menuReportes ventana = new menuReportes();
-          }
-                    
-        });
-        
-        JButton btSalir = new JButton("Cerrar Sesion");
+        JButton btSalir = new JButton("Volver");
         btSalir.setBounds(300, 390, 200, 50);
         
         btSalir.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
               screen.dispose();
-             menuInicial ventana = new menuInicial();
+             menuPrincipal ventana = new menuPrincipal();
           }
                     
         });
         
         
-        screen.add(btPlay);
-        screen.add(btAccount);
-        screen.add(btReportes);
+        screen.add(btRanking);
+        screen.add(btLogs);
         screen.add(btSalir);
         screen.add(titulo);
         
         screen.setVisible(true);
-        
     }
     
     
     public static void main(String[] args) {
-        menuPrincipal ventana = new menuPrincipal();
+        menuReportes ventana= new menuReportes();
     }
 }
