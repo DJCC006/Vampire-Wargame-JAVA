@@ -5,6 +5,8 @@
 package vampire_wargame.menusyventanas;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -30,19 +32,63 @@ public class menuPrincipal {
         titulo.setBounds(150, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
         
-        JButton botonLogIn = new JButton("Log In");
-        botonLogIn.setBounds(300, 180, 200, 50);
+        JButton btPlay = new JButton("Jugar VAMPIRE WARGAME");
+        btPlay.setBounds(300, 180, 200, 50);
         
-        JButton botonCreate = new JButton("Crear Player");
-        botonCreate.setBounds(300, 250, 200, 50);
+        btPlay.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+             
+          }
+                    
+        });
         
-        JButton botonSalir = new JButton("Salir");
-        botonSalir.setBounds(300, 320, 200, 50);
         
         
-        screen.add(botonLogIn);
-        screen.add(botonCreate);
-        screen.add(botonSalir);
+        JButton btAccount = new JButton("MI Perfil");
+        btAccount.setBounds(300, 250, 200, 50);
+        
+        btAccount.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+              ventanaPerfil ventana = new ventanaPerfil();
+          }
+                    
+        });
+        
+        
+        
+        JButton btReportes = new JButton("Reportes");
+        btReportes.setBounds(300, 320, 200, 50);
+        
+        btReportes.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+             
+          }
+                    
+        });
+        
+        JButton btSalir = new JButton("Cerrar Sesion");
+        btSalir.setBounds(300, 390, 200, 50);
+        
+        btSalir.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+             menuInicial ventana = new menuInicial();
+          }
+                    
+        });
+        
+        
+        screen.add(btPlay);
+        screen.add(btAccount);
+        screen.add(btReportes);
+        screen.add(btSalir);
         screen.add(titulo);
         
         screen.setVisible(true);

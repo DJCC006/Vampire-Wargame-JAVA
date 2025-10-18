@@ -48,6 +48,17 @@ public class ventanaLogIn {
         JButton btVolver= new JButton("Volver");
         btVolver.setBounds(100, 410, 250, 40);
         
+        
+         btCreate.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+              menuPrincipal ventana = new menuPrincipal();
+          }
+                    
+        });
+        
+        
          btVolver.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
