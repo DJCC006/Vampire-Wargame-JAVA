@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import vampire_wargame.UsersYFichas.Usuario;
 import vampire_wargame.UsersYFichas.controladorLogged;
@@ -24,7 +25,8 @@ public class ventanaLogIn {
     
     JFrame screen = new JFrame();
     JTextField usertxt = new JTextField();
-    JTextField contratxt = new JTextField();
+    //JTextField contratxt = new JTextField();
+    JPasswordField passwordfield = new JPasswordField(20);
     
     public ventanaLogIn(){
         screen.setSize(500, 600);  //Tamaño standard para menus
@@ -44,7 +46,8 @@ public class ventanaLogIn {
         
         JLabel contraLabel = new JLabel("Ingrese su contraseña:");
         contraLabel.setBounds(90, 175, 250, 50);
-        contratxt.setBounds(90, 210, 300, 25);
+        //contratxt.setBounds(90, 210, 300, 25);
+        passwordfield.setBounds(90, 210, 300, 25);
         
         
         
@@ -57,8 +60,11 @@ public class ventanaLogIn {
          btCreate.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              boolean check = checkAccount(usertxt.getText(), contratxt.getText());
+              char[] tempPass = passwordfield.getPassword();
+              String passwordString = new String(tempPass);
+              boolean check = checkAccount(usertxt.getText(), passwordString);
               if(check==true){
+                  java.util.Arrays.fill(tempPass, '0');//limpieza de password
                   screen.dispose();
                   menuPrincipal ventana = new menuPrincipal();
               }
@@ -76,11 +82,11 @@ public class ventanaLogIn {
                     
         });
         
-        
+        screen.add(passwordfield);
         screen.add(btCreate);
         screen.add(btVolver);
         screen.add(contraLabel);
-        screen.add(contratxt);
+        //screen.add(contratxt);
         screen.add(userlabel);
         screen.add(usertxt);
         screen.add(titulo);
@@ -95,11 +101,13 @@ public class ventanaLogIn {
     
     
     private boolean checkAccount(String username, String password){
+        char[] tempPass = passwordfield.getPassword();
+        String passwordString = new String(tempPass);
         for(int i=0; i<controladorUsuarios.getInstancia().getDBUsers().size(); i++){
             try{
                 Usuario user= controladorUsuarios.getInstancia().getDBUsers().get(i);
                 if(user.getUsername().equals(username)){
-                    if(user.getPassword().equals(password)){
+                    if(user.getPassword().equals(passwordString)){
                         JOptionPane.showMessageDialog(screen, "INICIO DE SESION EXITOSO");
                         controladorLogged.getInstancia().setUsuarioLogged(user);
                         System.out.println("Entra: "+user.getUsername());

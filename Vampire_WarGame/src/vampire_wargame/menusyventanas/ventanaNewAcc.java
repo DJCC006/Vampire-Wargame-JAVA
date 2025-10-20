@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import vampire_wargame.UsersYFichas.Usuario;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
@@ -22,7 +23,9 @@ import vampire_wargame.UsersYFichas.controladorUsuarios;
 public class ventanaNewAcc {
         JFrame screen = new JFrame();
         JTextField usertxt = new JTextField();
-        JTextField contratxt = new JTextField();
+        //JTextField contratxt = new JTextField();
+        
+        JPasswordField passwordfield = new JPasswordField(20);
     public ventanaNewAcc(){
         
         screen.setSize(500, 600);  //Tamaño standard para menus
@@ -43,8 +46,11 @@ public class ventanaNewAcc {
         
         JLabel contraLabel = new JLabel("Ingrese una contraseña:");
         contraLabel.setBounds(90, 175, 250, 50);
-        contratxt.setBounds(90, 210, 300, 25);
+        //contratxt.setBounds(90, 210, 300, 25);
         
+        
+        //Implementacion de passwordfield
+        passwordfield.setBounds(90, 210, 300, 25);
         
         
         JButton btCreate = new JButton("Crear Cuenta");
@@ -59,10 +65,13 @@ public class ventanaNewAcc {
               boolean revisionName=checkUsername(usertxt.getText());
               if(revisionPass==true && revisionName==true){
                    JOptionPane.showMessageDialog(screen, "Se ha creado la cuenta correctamente");
-                   Usuario newUser= new Usuario(usertxt.getText(), contratxt.getText());
+                   char[] tempPass = passwordfield.getPassword();
+                   String passwordString = new String(tempPass);
+                   Usuario newUser= new Usuario(usertxt.getText(), passwordString);
                    controladorUsuarios.getInstancia().getDBUsers().add(newUser);//agregado de nuevo usuario
+                   java.util.Arrays.fill(tempPass, '0');//limpieza de password
                    usertxt.setText("");
-                   contratxt.setText("");
+                   passwordfield.setText("");
               }
           }
                     
@@ -80,10 +89,12 @@ public class ventanaNewAcc {
                     
         });
         
+        
+        screen.add(passwordfield);
         screen.add(btCreate);
         screen.add(btVolver);
         screen.add(contraLabel);
-        screen.add(contratxt);
+        //screen.add(contratxt);
         screen.add(userlabel);
         screen.add(usertxt);
         screen.add(titulo);
@@ -105,9 +116,17 @@ public class ventanaNewAcc {
         boolean ver5=false;
         
         //Verificacion de length
-        String password =contratxt.getText();
-        int lengthpss = password.length();
-        System.out.println("Longitud: "+lengthpss);
+        //String password =contratxt.getText();
+        //int lengthpss = password.length();
+        
+        
+        //Retriever de password
+        char[] contra= passwordfield.getPassword();
+        int lengthpss = contra.length;
+        System.out.println("lengthpss: "+lengthpss);
+        
+        
+        //System.out.println("Longitud: "+lengthpss);
         if(lengthpss==5){
             ver1=true;   
         }else if(lengthpss<5){
@@ -116,11 +135,19 @@ public class ventanaNewAcc {
             System.out.println("Tiene una longitud mayor a 5");
         }
         
+        
+        
+        
+        
+        
+        
+        
         //verificar que contenga caracteres especiales
         String specialChars ="!@#$%&*()'+,-./:;<=>?[]^_`{|}";
-        for(int i=0; i<password.length(); i++){
-            String StChar = Character.toString(password.charAt(i));
-            if(specialChars.contains(StChar)){
+        for(int i=0; i<contra.length; i++){
+            String stChar = Character.toString(contra[i]);
+            //String StChar = Character.toString(password.charAt(i));
+            if(specialChars.contains(stChar)){
                 ver3=true;
                 System.out.println("Contiene un character especial");
                 break;   
@@ -131,8 +158,9 @@ public class ventanaNewAcc {
         //verificar que contenga caracter normal
         String abc="abcdefghijklmnñopqrstuvwxyz";
         String ABC="ABCDEFGHIJKLMNÑOPQRSTUVWXYZ";
-        for(int i=0;i<password.length(); i++){
-            String stChar=Character.toString(password.charAt(i));
+        for(int i=0;i<contra.length; i++){
+            String stChar = Character.toString(contra[i]);
+            //String stChar=Character.toString(password.charAt(i));
             if(abc.contains(stChar) || ABC.contains(stChar)){
                 ver5=true;
                 System.out.println("Contiene una letra normal");
@@ -144,8 +172,8 @@ public class ventanaNewAcc {
         
         //Verificar que no tiene espacios en blanco
         boolean checkSpaces=false;
-        for(int i=0; i<password.length(); i++){
-            char letra = password.charAt(i);
+        for(int i=0; i<contra.length; i++){
+            char letra = contra[i];
             if(letra==' '){
                 checkSpaces=true;
                 System.out.println("Se encontro un espacio en blanco");
