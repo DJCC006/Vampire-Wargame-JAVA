@@ -10,6 +10,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import vampire_wargame.UsersYFichas.controladorLogged;
+import vampire_wargame.UsersYFichas.controladorUsuarios;
 import vampire_wargame.menusyventanas.menuInicial;
 
 /**
@@ -80,6 +82,8 @@ public class menuPrincipal {
           @Override 
           public void actionPerformed(ActionEvent e){
               screen.dispose();
+              System.out.println("Sale: "+controladorLogged.getInstancia().getUsuarioLogged().getUsername());
+              controladorLogged.getInstancia().setUsuarioLogged(null);
              menuInicial ventana = new menuInicial();
           }
                     

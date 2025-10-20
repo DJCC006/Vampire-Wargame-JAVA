@@ -10,7 +10,11 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
+import vampire_wargame.UsersYFichas.Usuario;
+import vampire_wargame.UsersYFichas.controladorLogged;
+import vampire_wargame.UsersYFichas.controladorUsuarios;
 
 /**
  *
@@ -18,8 +22,11 @@ import javax.swing.JTextField;
  */
 public class ventanaLogIn {
     
+    JFrame screen = new JFrame();
+    JTextField usertxt = new JTextField();
+    JTextField contratxt = new JTextField();
+    
     public ventanaLogIn(){
-         JFrame screen = new JFrame();
         screen.setSize(500, 600);  //Tamaño standard para menus
         screen.setResizable(false);
         screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -32,13 +39,11 @@ public class ventanaLogIn {
         
         JLabel userlabel = new JLabel("Ingrese su nombre de usuario:");
         userlabel.setBounds(90, 100, 250, 50);
-        JTextField usertxt = new JTextField();
         usertxt.setBounds(90, 155, 300, 25);
         
         
         JLabel contraLabel = new JLabel("Ingrese su contraseña:");
         contraLabel.setBounds(90, 175, 250, 50);
-        JTextField contratxt = new JTextField();
         contratxt.setBounds(90, 210, 300, 25);
         
         
@@ -52,8 +57,11 @@ public class ventanaLogIn {
          btCreate.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              screen.dispose();
-              menuPrincipal ventana = new menuPrincipal();
+              boolean check = checkAccount(usertxt.getText(), contratxt.getText());
+              if(check==true){
+                  screen.dispose();
+                  menuPrincipal ventana = new menuPrincipal();
+              }
           }
                     
         });
@@ -84,4 +92,31 @@ public class ventanaLogIn {
     public static void main(String[] args) {
         ventanaLogIn ventana= new ventanaLogIn();
     }
+    
+    
+    private boolean checkAccount(String username, String password){
+        for(int i=0; i<controladorUsuarios.getInstancia().getDBUsers().size(); i++){
+            try{
+                Usuario user= controladorUsuarios.getInstancia().getDBUsers().get(i);
+                if(user.getUsername().equals(username)){
+                    if(user.getPassword().equals(password)){
+                        JOptionPane.showMessageDialog(screen, "INICIO DE SESION EXITOSO");
+                        controladorLogged.getInstancia().setUsuarioLogged(user);
+                        System.out.println("Entra: "+user.getUsername());
+                        return true;
+                    }else{
+                        JOptionPane.showMessageDialog(screen, "CONTRASEÑA INCORRECTA");
+                        return false;
+                    }
+                }
+            }catch(NullPointerException e){
+                System.out.println("Exception por algo");
+            }
+        }
+        JOptionPane.showMessageDialog(screen, "EL NOMBRE DE USUARIO NO EXISTE");
+        return false; //Senial de que no se encontro una cuenta bajo ese nombre
+    }
+    
+    
+    
 }
