@@ -4,6 +4,8 @@
  */
 package vampire_wargame.UsersYFichas;
 
+import javax.swing.ImageIcon;
+
 /**
  *
  * @author David
@@ -13,6 +15,7 @@ public abstract class Ficha {
     protected int ptVida;
     protected int ptEscudo;
     protected String ImageURL;
+    protected ImageIcon icon;
     
     public Ficha(int Vida, int Ataque, int Escudo){
         this.ptAtaque=Ataque;
@@ -33,6 +36,16 @@ public abstract class Ficha {
         }else if(ficha.ptEscudo==0 && ficha.ptVida>0){
             ficha.ptVida-=ptAtaque;
         }
+    }
+    
+    
+    public void setImageIcon(String URL){
+        ImageURL=URL;
+        icon= new ImageIcon(ImageURL);
+    }
+    
+    public ImageIcon getImageIcon(){
+        return icon;
     }
     
     //Este metodo lo definira cada ficha por separado

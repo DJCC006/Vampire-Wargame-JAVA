@@ -12,6 +12,7 @@ public class Vampire extends Ficha{
 
     public Vampire(){
         super(4,3,5);
+        super.setImageIcon("src\\resources\\vampIcon.png");
     }
     
     @Override

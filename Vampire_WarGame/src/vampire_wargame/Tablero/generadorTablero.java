@@ -11,7 +11,10 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import vampire_wargame.UsersYFichas.Ficha;
+import vampire_wargame.UsersYFichas.*;
 //import javax.swing.*;
 //import java.awt.*;
 /**
@@ -28,10 +31,53 @@ public class generadorTablero extends JPanel implements MouseListener {
     private int columnaSeleccionada=-1;
     
     
+    private Ficha fichaOnHold;
+    private int previousX;
+    private int previousY;
+    
+    
+    //Tablero logico
+    Ficha[][] tableroLogico = new Ficha[6][6];
+    
+    
+    
+    
+    
+    
+    /*
+    0 1 2 3 4 5 
+    x x x x x x
+    x x x x x x
+    x x x x x x 
+    x x x x x x 
+    x x x x x x 
+    x x x x x x 
+    */
+    
+    
+    
+    
+    
     public generadorTablero(int tamanioCeldas){
         this.tamanioCeldas= tamanioCeldas;
         setPreferredSize(new Dimension(columnas * tamanioCeldas, filas*tamanioCeldas));
         addMouseListener(this);//agregar el listener de los clicks
+        
+        //Colocacuion de fichas
+        tableroLogico[0][0]= new wolfMan(); 
+        tableroLogico[0][1] = new Vampire();
+        tableroLogico[0][2]= new NecroMancer();
+        tableroLogico[0][3]= new NecroMancer();
+        tableroLogico[0][4]= new Vampire();
+        tableroLogico[0][5]= new wolfMan();
+        
+        
+        tableroLogico[5][0]= new wolfMan();
+        tableroLogico[5][1]= new Vampire();
+        tableroLogico[5][2]= new NecroMancer();
+        tableroLogico[5][3]= new NecroMancer();
+        tableroLogico[5][4]= new Vampire();
+        tableroLogico[5][5]= new wolfMan();
     }
     
     
@@ -45,6 +91,13 @@ public class generadorTablero extends JPanel implements MouseListener {
        
         int anchoCelda =getWidth()/columnas;
         int alturaCelda= getHeight()/filas;
+        
+        
+        
+        System.out.println("Ancho de celda: "+anchoCelda+"px  | Altura de Celda: "+alturaCelda+"px");
+        System.out.println("Medida total de tablero: "+getWidth()+"x"+getHeight()+"pxs");
+        
+        
         
         for(int i=0; i<filas; i++){
             for(int j=0; j<columnas; j++){
@@ -72,6 +125,13 @@ public class generadorTablero extends JPanel implements MouseListener {
                 }
                 
                
+                //Print de fichas
+                if(tableroLogico[i][j]!=null){
+                    ImageIcon iconoFicha = tableroLogico[i][j].getImageIcon();
+                    iconoFicha.paintIcon(this,g,x,y);
+                }
+                
+                
                 
                 
             }
@@ -99,6 +159,23 @@ public class generadorTablero extends JPanel implements MouseListener {
                filaSeleccionada=fila;
                columnaSeleccionada=columna;
                System.out.println("Fila: "+filaSeleccionada+" Columna: "+columnaSeleccionada);
+               
+               //Check up de casilla con tablero logico
+               if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                   System.out.println("Aqui hay una ficha!");
+                   fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                   previousX=filaSeleccionada;
+                   previousY=columnaSeleccionada;
+                   
+               }else{
+                   System.out.println("Aqui no hay nada");
+                   tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
+                   tableroLogico[previousX][previousY]= null;
+                   fichaOnHold=null;
+                   repaint();
+               }
+               
+               
                 
             }
             repaint(); 
@@ -130,6 +207,13 @@ public class generadorTablero extends JPanel implements MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
         
+    }
+    
+    
+    
+    private void paintFichas(int x, int y){
+        ImageIcon iconoFicha = tableroLogico[x][y].getImageIcon();
+        //iconoFicha.paintIcon(this,g,x,y);
     }
     
 

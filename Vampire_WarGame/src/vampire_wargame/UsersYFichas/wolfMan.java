@@ -12,7 +12,11 @@ public class wolfMan extends Ficha{
     
     public wolfMan(){
         super(5,5,2);
+        super.setImageIcon("src\\resources\\wolfIcon.png");
     };
+    
+    
+    
     
     
     @Override

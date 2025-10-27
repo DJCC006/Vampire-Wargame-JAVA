@@ -11,6 +11,7 @@ package vampire_wargame.UsersYFichas;
 public class NecroMancer extends Ficha {
     public NecroMancer(){
         super(4,3,1);
+        super.setImageIcon("src\\resources\\deathIcon.png");
     }
     
     
