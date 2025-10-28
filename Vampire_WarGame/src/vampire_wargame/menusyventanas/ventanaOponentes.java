@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import vampire_wargame.Tablero.gamePlay;
 
 /**
  *
@@ -34,6 +35,22 @@ public class ventanaOponentes {
         JButton btSalir = new JButton("Volver");
         btSalir.setBounds(500, 390, 200, 50);
         
+        
+        JButton btJugar = new JButton("Jugar");
+        btJugar.setBounds(300, 390, 200, 50);
+        
+        
+        btJugar.addActionListener(new ActionListener(){
+          @Override 
+          public void actionPerformed(ActionEvent e){
+              screen.dispose();
+             gamePlay ventana = new gamePlay();
+          }
+                    
+        });
+        
+        
+        
         btSalir.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
@@ -46,6 +63,7 @@ public class ventanaOponentes {
      
         screen.add(btSalir);
         screen.add(titulo);
+        screen.add(btJugar);
         
         screen.setVisible(true);
     }

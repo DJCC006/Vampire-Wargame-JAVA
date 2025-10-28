@@ -10,12 +10,16 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import vampire_wargame.UsersYFichas.Usuario;
+import vampire_wargame.UsersYFichas.controladorLogged;
 
 /**
  *
  * @author David
  */
 public class ventanaPerfil {
+    Usuario usuarioLogged= controladorLogged.getInstancia().getUsuarioLogged();
+    
     public ventanaPerfil(){
         JFrame screen = new JFrame();
         screen.setSize(800, 600);  //Tamaño standard para menus
@@ -30,33 +34,43 @@ public class ventanaPerfil {
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
         
         //Labels Mostrando informacion de jugador
-        JLabel usernameLabel = new JLabel("Username: ");
+        JLabel usernameLabel = new JLabel("Username: "+usuarioLogged.getUsername());
         usernameLabel.setBounds(100, 150, 500, 70);
         usernameLabel.setFont(new Font("Serif", Font.BOLD, 25));
         
         
-        JLabel puntosLabel = new JLabel("Puntos: ");
+        JLabel puntosLabel = new JLabel("Puntos: "+usuarioLogged.getPoints());
         puntosLabel.setBounds(100, 200, 500, 70);
         puntosLabel.setFont(new Font("Serif", Font.BOLD, 25));
         
-        JLabel dateLabel = new JLabel("Fecha de Ingreso: ");
+        JLabel dateLabel = new JLabel("Fecha de Ingreso: "+usuarioLogged.getCreacionDate());
         dateLabel.setBounds(100, 250, 500, 70);
         dateLabel.setFont(new Font("Serif", Font.BOLD, 25));
         
-        JLabel statusLabel = new JLabel("Estado de Cuenta: ");
-        statusLabel.setBounds(100, 300, 500, 70);
-        statusLabel.setFont(new Font("Serif", Font.BOLD, 25));
+
         
         
         
         //Configuracion de botones
+        if(usuarioLogged.getStatus()==true){
+            JLabel statusLabel = new JLabel("Estado de Cuenta: ACTIVO");
+            statusLabel.setBounds(100, 300, 500, 70);
+            statusLabel.setFont(new Font("Serif", Font.BOLD, 25));
+            screen.add(statusLabel);
+        }else{
+            JLabel statusLabel = new JLabel("Estado de Cuenta: DESACTIVA");
+            statusLabel.setBounds(100, 300, 500, 70);
+            statusLabel.setFont(new Font("Serif", Font.BOLD, 25));
+            screen.add(statusLabel);
+        }
+        
         JButton btChangePssw = new JButton("Cambiar Contraseña");
         btChangePssw.setBounds(500, 250, 200, 50);
         
         btChangePssw.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              screen.dispose();
+              
              
           }
                     
@@ -70,7 +84,7 @@ public class ventanaPerfil {
         btBorrar.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              screen.dispose();
+              
              
           }
                     
@@ -91,7 +105,7 @@ public class ventanaPerfil {
         screen.add(usernameLabel);
         screen.add(puntosLabel);
         screen.add(dateLabel);
-        screen.add(statusLabel);
+        
         screen.add(btChangePssw);
         screen.add(btBorrar);
         screen.add(btSalir);

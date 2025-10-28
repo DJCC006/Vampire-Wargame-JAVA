@@ -8,9 +8,12 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.List;
+import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import vampire_wargame.UsersYFichas.Ficha;
@@ -31,13 +34,17 @@ public class generadorTablero extends JPanel implements MouseListener {
     private int columnaSeleccionada=-1;
     
     
+    //Elementos para el manejo de movimiento de fichas
     private Ficha fichaOnHold;
+    private boolean seleccion=false;
     private int previousX;
     private int previousY;
     
     
     //Tablero logico
     Ficha[][] tableroLogico = new Ficha[6][6];
+    private ArrayList<Point> casillasDisponibles = new ArrayList<>(); //Guarda las coordenadas de las casillas que se remarcaran
+    
     
     
     
@@ -115,6 +122,9 @@ public class generadorTablero extends JPanel implements MouseListener {
                 int x= j *anchoCelda;
                 int y = i*alturaCelda;
                 
+                
+                
+                
                 g2.fillRect(x, y, anchoCelda, alturaCelda);
 
                 
@@ -122,6 +132,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                 if(i==filaSeleccionada && j == columnaSeleccionada){
                     g2.setColor(Color.RED);
                     g2.fillRect(x, y, anchoCelda, alturaCelda);
+                    System.out.println("COORDS DE RED PINTADA: "+x+","+y);
                 }
                 
                
@@ -130,12 +141,21 @@ public class generadorTablero extends JPanel implements MouseListener {
                     ImageIcon iconoFicha = tableroLogico[i][j].getImageIcon();
                     iconoFicha.paintIcon(this,g,x,y);
                 }
-                
-                
-                
-                
             }
         }
+        
+        
+        //Pintar las casillas de seleccion
+        g2.setColor(new Color(0,255,0,100));
+        for(Point p: casillasDisponibles){
+            int x = p.y*anchoCelda;
+            int y = p.x*alturaCelda;
+            System.out.println("CORDS DE PINTADA: "+x+","+y);
+            g2.fillRect(x, y, anchoCelda, alturaCelda);
+        }
+        
+        
+        
         System.out.println("Ya se ha pintado todo chaval");
     }
 
@@ -166,12 +186,20 @@ public class generadorTablero extends JPanel implements MouseListener {
                    fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
                    previousX=filaSeleccionada;
                    previousY=columnaSeleccionada;
+                   seleccion=true;
+                   
+                   if(fichaOnHold!= null){
+                       calcularMovimientos(filaSeleccionada, columnaSeleccionada);
+                   }
+                   
                    
                }else{
                    System.out.println("Aqui no hay nada");
                    tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
                    tableroLogico[previousX][previousY]= null;
                    fichaOnHold=null;
+                   seleccion=false;
+                   casillasDisponibles.clear();
                    repaint();
                }
                
@@ -215,6 +243,71 @@ public class generadorTablero extends JPanel implements MouseListener {
         ImageIcon iconoFicha = tableroLogico[x][y].getImageIcon();
         //iconoFicha.paintIcon(this,g,x,y);
     }
+    
+    
+    //Por revisar
+    private void paintCampoSeleccion(int x, int y,  Graphics2D g2){//x y de la posicion actual
+        //Medidas de celdas
+        int anchoCelda =getWidth()/columnas;
+        int alturaCelda= getHeight()/filas;
+        
+        //posicionamiento de array
+        int fila = y/tamanioCeldas;
+        int columna = x/tamanioCeldas;
+        
+        
+        //     * * *     
+        //     * F *
+        //     * * *
+        
+        
+        //F-1/C-1  F-1  F-1/C+1
+        //    C-1  A  C+1
+        //F+1/C-1  F+1  F+1/C+1
+        
+        
+        if(tableroLogico[fila][columna]==null){
+            g2.setColor(Color.RED);
+            g2.fillRect(x, y, anchoCelda, alturaCelda);
+            repaint();
+        }
+        
+    }
+    
+   
+    private void calcularMovimientos(int fila, int columna){
+        casillasDisponibles.clear();
+        
+        int[][] direcciones={
+            {-1,0}, //arriba
+            {1,0},//abajo
+            {0,-1},//izquierda
+            {0,1},//derecha
+            {-1,-1}, //esquina superior izquierda
+            {-1,1},//esquina superior derecha
+            {1,-1},//esquina inferior izquierda
+            {1,1}//esquina inferiro derecha
+        };
+        
+        for(int[] cords: direcciones){
+            int filaNueva= fila +cords[0];
+            int columnaNueva = columna +cords[1];
+            
+            //Verificacion que este dentro de los parametros del tablero
+            if(filaNueva>=0 && filaNueva< tableroLogico.length && columnaNueva>=0 && columnaNueva< tableroLogico[0].length){
+                
+                //Verificar que la casilla este vacia de verdad
+                if(tableroLogico[filaNueva][columnaNueva]==null ){
+                    System.out.println("New Cords: "+filaNueva+","+columnaNueva);
+                    casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                } 
+            }
+        }
+        
+        repaint();
+    }
+    
+    
     
 
 }

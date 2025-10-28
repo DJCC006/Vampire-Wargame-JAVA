@@ -15,8 +15,7 @@ import javax.swing.SwingUtilities;
  */
 public class gamePlay {
     
-    
-    public static void main(String[] args) {
+    public gamePlay(){
         SwingUtilities.invokeLater(()-> {
             JFrame screen = new JFrame();
             screen.setSize(1000, 800);  //Tamaño standard para menus
@@ -39,13 +38,15 @@ public class gamePlay {
             screen.add(panelTablero);
             screen.setVisible(true);
         });
-    }
-    
-    
-    public gamePlay(){
         
-        //tablero.repaint();
     }
+    
+    public static void main(String[] args) {
+        gamePlay game = new gamePlay();
+    }
+    
+    
+    
     
     
    

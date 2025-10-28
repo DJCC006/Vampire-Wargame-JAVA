@@ -65,4 +65,8 @@ public class Usuario {
         return status;
     }
     
+    public LocalDate getCreacionDate(){
+        return creacionCuenta;
+    }
+    
 }
