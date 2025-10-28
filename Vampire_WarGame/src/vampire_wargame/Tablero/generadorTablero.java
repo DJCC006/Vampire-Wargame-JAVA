@@ -44,27 +44,7 @@ public class generadorTablero extends JPanel implements MouseListener {
     //Tablero logico
     Ficha[][] tableroLogico = new Ficha[6][6];
     private ArrayList<Point> casillasDisponibles = new ArrayList<>(); //Guarda las coordenadas de las casillas que se remarcaran
-    
-    
-    
-    
-    
-    
-    
-    /*
-    0 1 2 3 4 5 
-    x x x x x x
-    x x x x x x
-    x x x x x x 
-    x x x x x x 
-    x x x x x x 
-    x x x x x x 
-    */
-    
-    
-    
-    
-    
+ 
     public generadorTablero(int tamanioCeldas){
         this.tamanioCeldas= tamanioCeldas;
         setPreferredSize(new Dimension(columnas * tamanioCeldas, filas*tamanioCeldas));
@@ -99,13 +79,6 @@ public class generadorTablero extends JPanel implements MouseListener {
         int anchoCelda =getWidth()/columnas;
         int alturaCelda= getHeight()/filas;
         
-        
-        
-        System.out.println("Ancho de celda: "+anchoCelda+"px  | Altura de Celda: "+alturaCelda+"px");
-        System.out.println("Medida total de tablero: "+getWidth()+"x"+getHeight()+"pxs");
-        
-        
-        
         for(int i=0; i<filas; i++){
             for(int j=0; j<columnas; j++){
                 g2.drawRect(j*tamanioCeldas, i*tamanioCeldas, tamanioCeldas, tamanioCeldas);
@@ -128,8 +101,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                 g2.fillRect(x, y, anchoCelda, alturaCelda);
 
                 
-                //Seleccion de casilla
-                if(i==filaSeleccionada && j == columnaSeleccionada){
+                //Seleccion de casilla solo si tiene ficha 
+                if(i==filaSeleccionada && j == columnaSeleccionada && fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
                     g2.setColor(Color.RED);
                     g2.fillRect(x, y, anchoCelda, alturaCelda);
                     System.out.println("COORDS DE RED PINTADA: "+x+","+y);
@@ -150,7 +123,6 @@ public class generadorTablero extends JPanel implements MouseListener {
         for(Point p: casillasDisponibles){
             int x = p.y*anchoCelda;
             int y = p.x*alturaCelda;
-            System.out.println("CORDS DE PINTADA: "+x+","+y);
             g2.fillRect(x, y, anchoCelda, alturaCelda);
         }
         
@@ -175,6 +147,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                 filaSeleccionada=-1;
                 columnaSeleccionada=-1;
                 System.out.println("Casilla Deseleccionada");
+                casillasDisponibles.clear();
+                repaint();
             }else{
                filaSeleccionada=fila;
                columnaSeleccionada=columna;
@@ -194,17 +168,35 @@ public class generadorTablero extends JPanel implements MouseListener {
                    
                    
                }else{
-                   System.out.println("Aqui no hay nada");
-                   tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
-                   tableroLogico[previousX][previousY]= null;
-                   fichaOnHold=null;
-                   seleccion=false;
-                   casillasDisponibles.clear();
-                   repaint();
+                   
+                   for(Point p:casillasDisponibles){
+                       int pX= p.x;
+                       int pY= p.y;
+                       
+                       if(filaSeleccionada==pX && columnaSeleccionada==pY){
+                            System.out.println("Si esta en rango");
+                            //Movimiento
+                            tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
+                            tableroLogico[previousX][previousY]= null;
+                            fichaOnHold=null;
+                            seleccion=false;
+                            //reseteo de seleccion
+                            filaSeleccionada=-1;
+                            columnaSeleccionada=-1;
+                            casillasDisponibles.clear();
+                            repaint();
+                            break;
+                       }
+                   }
+                   
+                   
+                    filaSeleccionada=-1;
+                    columnaSeleccionada=-1;
+                    System.out.println("Casilla Deseleccionada");
+                    casillasDisponibles.clear();
+                    repaint();
+                   
                }
-               
-               
-                
             }
             repaint(); 
         }
