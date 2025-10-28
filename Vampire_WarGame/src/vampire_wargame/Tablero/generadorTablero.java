@@ -40,6 +40,10 @@ public class generadorTablero extends JPanel implements MouseListener {
     private int previousX;
     private int previousY;
     
+    //Controlador de turnos
+    private boolean turnos=true;// true-JUGADOR    false-CONTRARIO
+    
+    
     
     //Tablero logico
     Ficha[][] tableroLogico = new Ficha[6][6];
@@ -51,22 +55,38 @@ public class generadorTablero extends JPanel implements MouseListener {
         addMouseListener(this);//agregar el listener de los clicks
         
         //Colocacuion de fichas
-        tableroLogico[0][0]= new wolfMan(); 
+        //FICHAS CONTRICANTES
+        tableroLogico[0][0]= new wolfMan();
+        tableroLogico[0][0].setBando("CONTRARIO");
         tableroLogico[0][1] = new Vampire();
+        tableroLogico[0][1].setBando("CONTRARIO");
         tableroLogico[0][2]= new NecroMancer();
+        tableroLogico[0][2].setBando("CONTRARIO");
         tableroLogico[0][3]= new NecroMancer();
+        tableroLogico[0][3].setBando("CONTRARIO");
         tableroLogico[0][4]= new Vampire();
+        tableroLogico[0][4].setBando("CONTRARIO");
         tableroLogico[0][5]= new wolfMan();
+        tableroLogico[0][5].setBando("CONTRARIO");
         
         
+        //FICHAS DE JUGADOR
         tableroLogico[5][0]= new wolfMan();
+        tableroLogico[5][0].setBando("JUGADOR");
         tableroLogico[5][1]= new Vampire();
+        tableroLogico[5][1].setBando("JUGADOR");
         tableroLogico[5][2]= new NecroMancer();
+        tableroLogico[5][2].setBando("JUGADOR");
         tableroLogico[5][3]= new NecroMancer();
+        tableroLogico[5][3].setBando("JUGADOR");
         tableroLogico[5][4]= new Vampire();
+        tableroLogico[5][4].setBando("JUGADOR");
         tableroLogico[5][5]= new wolfMan();
+        tableroLogico[5][5].setBando("JUGADOR");
+        
+        
+        System.out.println("TURNO JUGADOR");
     }
-    
     
     @Override
     protected void paintComponent(Graphics g){
@@ -83,8 +103,6 @@ public class generadorTablero extends JPanel implements MouseListener {
             for(int j=0; j<columnas; j++){
                 g2.drawRect(j*tamanioCeldas, i*tamanioCeldas, tamanioCeldas, tamanioCeldas);
                 
-                
-               
                 if((i+j)%2==0){
                     g2.setColor(Color.LIGHT_GRAY);
                 }else{
@@ -95,20 +113,25 @@ public class generadorTablero extends JPanel implements MouseListener {
                 int x= j *anchoCelda;
                 int y = i*alturaCelda;
                 
-                
-                
-                
                 g2.fillRect(x, y, anchoCelda, alturaCelda);
-
                 
                 //Seleccion de casilla solo si tiene ficha 
                 if(i==filaSeleccionada && j == columnaSeleccionada && fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
-                    g2.setColor(Color.RED);
-                    g2.fillRect(x, y, anchoCelda, alturaCelda);
-                    System.out.println("COORDS DE RED PINTADA: "+x+","+y);
+                    
+                    //Seleccion condicionada al turno actual
+                    if(turnos==true){
+                        if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                        }
+                    }else if(turnos==false){
+                        if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                        }
+                    }
                 }
                 
-               
                 //Print de fichas
                 if(tableroLogico[i][j]!=null){
                     ImageIcon iconoFicha = tableroLogico[i][j].getImageIcon();
@@ -117,7 +140,6 @@ public class generadorTablero extends JPanel implements MouseListener {
             }
         }
         
-        
         //Pintar las casillas de seleccion
         g2.setColor(new Color(0,255,0,100));
         for(Point p: casillasDisponibles){
@@ -125,8 +147,6 @@ public class generadorTablero extends JPanel implements MouseListener {
             int y = p.x*alturaCelda;
             g2.fillRect(x, y, anchoCelda, alturaCelda);
         }
-        
-        
         
         System.out.println("Ya se ha pintado todo chaval");
     }
@@ -143,6 +163,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         //Comprobacion que sean las filas y columnas del tablero como tal
         if(fila>=0 && fila<filas && columna>=0 && columna<columnas){
+            //CASO 1 DE DESELECCION: CUANDO ES SU MISMA FICHA
             if(fila==filaSeleccionada && columna == columnaSeleccionada){
                 filaSeleccionada=-1;
                 columnaSeleccionada=-1;
@@ -150,22 +171,53 @@ public class generadorTablero extends JPanel implements MouseListener {
                 casillasDisponibles.clear();
                 repaint();
             }else{
-               filaSeleccionada=fila;
-               columnaSeleccionada=columna;
-               System.out.println("Fila: "+filaSeleccionada+" Columna: "+columnaSeleccionada);
                
+                filaSeleccionada=fila;
+                columnaSeleccionada=columna;
+                
                //Check up de casilla con tablero logico
                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
-                   System.out.println("Aqui hay una ficha!");
-                   fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
-                   previousX=filaSeleccionada;
-                   previousY=columnaSeleccionada;
-                   seleccion=true;
-                   
-                   if(fichaOnHold!= null){
-                       calcularMovimientos(filaSeleccionada, columnaSeleccionada);
+                   //Seleccion dependiendo del turno
+                   if(turnos==true){
+                       if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
+                            System.out.println("Aqui hay una ficha!");
+                            fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                            previousX=filaSeleccionada;
+                            previousY=columnaSeleccionada;
+                            seleccion=true;
+
+                            if(fichaOnHold!= null){
+                                calcularMovimientos(filaSeleccionada, columnaSeleccionada);
+                            }
+                       }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
+                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
+                            filaSeleccionada=-1;
+                            columnaSeleccionada=-1;
+                            System.out.println("Casilla Deseleccionada");
+                            casillasDisponibles.clear();
+                            repaint();
+                       }
+                   }else if(turnos==false){
+                       if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
+                            System.out.println("Aqui hay una ficha!");
+                            fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                            previousX=filaSeleccionada;
+                            previousY=columnaSeleccionada;
+                            seleccion=true;
+
+                            if(fichaOnHold!= null){
+                                calcularMovimientos(filaSeleccionada, columnaSeleccionada);
+                            }
+                       }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
+                           //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
+                            filaSeleccionada=-1;
+                            columnaSeleccionada=-1;
+                            System.out.println("Casilla Deseleccionada");
+                            casillasDisponibles.clear();
+                            repaint();
+                       }
+                       
                    }
-                   
                    
                }else{
                    
@@ -185,11 +237,22 @@ public class generadorTablero extends JPanel implements MouseListener {
                             columnaSeleccionada=-1;
                             casillasDisponibles.clear();
                             repaint();
+                            if(turnos==true){
+                                turnos=false;
+                                System.out.println("TURNO CONTRICANTE");
+                            }else{
+                                turnos=true;
+                                System.out.println("TURNO JUGADOR");
+                            }
+                            
+                            
+                            
                             break;
                        }
                    }
                    
-                   
+                   //CASO 3  DE DESELECCION: CUANDO SE CLICKEA EN UNA FICHA SIN NADA
+                   //Buffer de en caso que se clickee en casilla donde no hay nada
                     filaSeleccionada=-1;
                     columnaSeleccionada=-1;
                     System.out.println("Casilla Deseleccionada");
@@ -199,14 +262,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                }
             }
             repaint(); 
-        }
-        
-        
-        
-        //Verificador en case que clickee en la misma casilla, para desactivar seleccion
-        //Aunque creo que solo habria seleccion unica.....si es asi, no es necesario esto
-       
-        
+        }  
     }
 
     @Override
@@ -236,37 +292,6 @@ public class generadorTablero extends JPanel implements MouseListener {
         //iconoFicha.paintIcon(this,g,x,y);
     }
     
-    
-    //Por revisar
-    private void paintCampoSeleccion(int x, int y,  Graphics2D g2){//x y de la posicion actual
-        //Medidas de celdas
-        int anchoCelda =getWidth()/columnas;
-        int alturaCelda= getHeight()/filas;
-        
-        //posicionamiento de array
-        int fila = y/tamanioCeldas;
-        int columna = x/tamanioCeldas;
-        
-        
-        //     * * *     
-        //     * F *
-        //     * * *
-        
-        
-        //F-1/C-1  F-1  F-1/C+1
-        //    C-1  A  C+1
-        //F+1/C-1  F+1  F+1/C+1
-        
-        
-        if(tableroLogico[fila][columna]==null){
-            g2.setColor(Color.RED);
-            g2.fillRect(x, y, anchoCelda, alturaCelda);
-            repaint();
-        }
-        
-    }
-    
-   
     private void calcularMovimientos(int fila, int columna){
         casillasDisponibles.clear();
         
@@ -298,8 +323,4 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         repaint();
     }
-    
-    
-    
-
 }
