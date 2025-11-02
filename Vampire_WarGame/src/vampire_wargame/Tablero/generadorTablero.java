@@ -147,8 +147,6 @@ public class generadorTablero extends JPanel implements MouseListener {
             int y = p.x*alturaCelda;
             g2.fillRect(x, y, anchoCelda, alturaCelda);
         }
-        
-        System.out.println("Ya se ha pintado todo chaval");
     }
 
     @Override
@@ -226,7 +224,6 @@ public class generadorTablero extends JPanel implements MouseListener {
                        int pY= p.y;
                        
                        if(filaSeleccionada==pX && columnaSeleccionada==pY){
-                            System.out.println("Si esta en rango");
                             //Movimiento
                             tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
                             tableroLogico[previousX][previousY]= null;
@@ -315,7 +312,6 @@ public class generadorTablero extends JPanel implements MouseListener {
                 
                 //Verificar que la casilla este vacia de verdad
                 if(tableroLogico[filaNueva][columnaNueva]==null ){
-                    System.out.println("New Cords: "+filaNueva+","+columnaNueva);
                     casillasDisponibles.add(new Point(filaNueva, columnaNueva));
                 } 
             }
