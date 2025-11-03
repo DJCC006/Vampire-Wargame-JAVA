@@ -11,7 +11,7 @@ package vampire_wargame.UsersYFichas;
 public class wolfMan extends Ficha{
     
     public wolfMan(){
-        super(5,5,2);
+        super(5,5,2,1);
         super.setImageIcon("src\\resources\\wolfIcon.png");
     };
     

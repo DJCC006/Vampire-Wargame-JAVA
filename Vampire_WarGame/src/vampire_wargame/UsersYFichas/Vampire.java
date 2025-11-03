@@ -11,7 +11,7 @@ package vampire_wargame.UsersYFichas;
 public class Vampire extends Ficha{
 
     public Vampire(){
-        super(4,3,5);
+        super(4,3,5,2);
         super.setImageIcon("src\\resources\\vampIcon.png");
     }
     

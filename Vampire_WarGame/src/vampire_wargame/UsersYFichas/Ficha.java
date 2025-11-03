@@ -17,11 +17,12 @@ public abstract class Ficha {
     protected String ImageURL;
     protected ImageIcon icon;
     protected String bando;
-    
-    public Ficha(int Vida, int Ataque, int Escudo){
+    protected int Type;
+    public Ficha(int Vida, int Ataque, int Escudo, int Type){
         this.ptAtaque=Ataque;
         this.ptVida=Vida;
         this.ptEscudo=Escudo;
+        this.Type=Type;
     }
     
     
@@ -56,6 +57,11 @@ public abstract class Ficha {
     
     public String getBando(){
         return bando;
+    }
+    
+    
+    public int getTypeFicha(){
+        return Type;
     }
     
     //Este metodo lo definira cada ficha por separado

@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 
 /**
  *
@@ -30,12 +31,16 @@ public class ruletaGen {
     private ImageIcon vampImag;
     private ImageIcon necroImag;
     private ImageIcon nullIcon;
+    
+    private int lastSelected=0;
+   
+    
     public ruletaGen(){
       rand = new Random();
       favorabilidadActiva= new HashMap<>();
-      favorabilidadActiva.put(1, 2);//(TIPO FICHA, CANTIDAD DE ESA FICHA)
-      favorabilidadActiva.put(2, 2);
-      favorabilidadActiva.put(3, 2); 
+      favorabilidadActiva.put(1, 2);//Wolf      (TIPO FICHA, CANTIDAD DE ESA FICHA)
+      favorabilidadActiva.put(2, 2);//Vamp
+      favorabilidadActiva.put(3, 2);//Necro 
       //Esto me dice que los tipo de ficha deben que manejarse con ints
       
       ruletaImag= new ImageIcon("src\\resources\\ruletaGIF.gif");
@@ -43,7 +48,13 @@ public class ruletaGen {
       vampImag = new ImageIcon("src\\resources\\vampIcon.png");
       necroImag = new ImageIcon("src\\resources\\deathIcon.png");
       nullIcon = new ImageIcon("src\\resources\\nuledaIcon.png");
-      genVisuals();
+      
+      
+      
+     
+      
+      
+      //genVisuals();
     }
     
     
@@ -157,6 +168,9 @@ public class ruletaGen {
        texto.setIcon(ruletaImag);
        ruletaPanel.add(texto);
        
+       
+       
+       
        JButton btGirar = new JButton("GIRAR RULETA");
         btGirar.setBounds(200, 100, 200, 50);
         
@@ -168,55 +182,66 @@ public class ruletaGen {
               System.out.println("");
               int resultado = girarRuleta();
               
+              lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
+              
               switch(resultado){
                   case 1:
-                      System.out.println("RESULTADO: HOMBRE LOBO");
                       texto.setIcon(wolfImag);
+                      System.out.println("RESULTADO: HOMBRE LOBO");
                       break;
                       
+                      
                   case 2:
-                      System.out.println("RESULTADO: VAMPIRO");
                       texto.setIcon(vampImag);
+                      System.out.println("RESULTADO: VAMPIRO");
+                      
                       break;
                       
                   case 3:
-                      System.out.println("RESULTADO: NECROMANCER");
                       texto.setIcon(necroImag);
+                      System.out.println("RESULTADO: NECROMANCER");
+                      
                       break;
                       
                   case 0:
-                      System.out.println("RESULTADO: ESPACIO VACIO");
                       texto.setIcon(nullIcon);
+                      System.out.println("RESULTADO: ESPACIO VACIO");
                       break;
               }
-             
+              
+              iniciarTempoCierre();
           }
                     
         });
-       
-        
-        //Se deberia de agregar un timer para que se cierre automaticamente esta ventana 
-        
-        JButton btVGirar = new JButton("REINICIAR RULETA");//NO DEBERIA IR, SOLO TESTEO
-        btVGirar.setBounds(400, 100, 200, 50);
-       
-        btVGirar.addActionListener(new ActionListener(){
-          @Override 
-          public void actionPerformed(ActionEvent e){
-             texto.setIcon(ruletaImag);
-             reducirPesoFicha(1);
-          }
-                    
-        });
-        
-        
-       
-        screen.add(btVGirar);
        screen.add(btGirar);
        screen.add(ruletaPanel);
        screen.setVisible(true);
     }
     
+    public void closeVisual(){
+        screen.dispose();
+    }
+    
+    private void iniciarTempoCierre(){
+        //Timer para que se cierre automaticamente la ventana una vez se obtiene el intento
+        Timer timer = new Timer(2000, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
+                screen.dispose();
+                ((Timer)e.getSource()).stop();
+            }         
+        });
+              
+        timer.setRepeats(false);
+        timer.start();
+    }
+            
+    public int getLastSelected(){
+        return lastSelected;
+    }
     
     
+    public void cleanLastSelected(){
+        lastSelected=5;
+    }
 }
