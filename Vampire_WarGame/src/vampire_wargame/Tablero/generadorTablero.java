@@ -214,6 +214,7 @@ public class generadorTablero extends JPanel implements MouseListener {
 
                             if(fichaOnHold!= null && typFichaActual== fichaOnHold.getTypeFicha()){
                                 calcularMovimientos(filaSeleccionada, columnaSeleccionada);
+                                
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
@@ -341,20 +342,19 @@ public class generadorTablero extends JPanel implements MouseListener {
     private void calcularMovimientos(int fila, int columna){
         casillasDisponibles.clear();
         
-        int[][] direcciones={
-            {-1,0}, //arriba
-            {1,0},//abajo
-            {0,-1},//izquierda
-            {0,1},//derecha
-            {-1,-1}, //esquina superior izquierda
-            {-1,1},//esquina superior derecha
-            {1,-1},//esquina inferior izquierda
-            {1,1}//esquina inferiro derecha
-        };
+        int[][] direcciones=fichaOnHold.getdirecciones();
         
         for(int[] cords: direcciones){
+            
             int filaNueva= fila +cords[0];
             int columnaNueva = columna +cords[1];
+            
+//            if(typFichaActual==1){
+//                filaNueva+=1;
+//                columnaNueva+=1;
+//            }
+            
+            
             
             //Verificacion que este dentro de los parametros del tablero
             if(filaNueva>=0 && filaNueva< tableroLogico.length && columnaNueva>=0 && columnaNueva< tableroLogico[0].length){

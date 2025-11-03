@@ -26,6 +26,11 @@ public abstract class Ficha {
     }
     
     
+    protected int[][] direcciones;
+    
+    
+    
+    
     public void ataque(Ficha ficha){
         if(ficha.ptEscudo>0){
             if(ficha.ptEscudo> ptAtaque){
@@ -62,6 +67,11 @@ public abstract class Ficha {
     
     public int getTypeFicha(){
         return Type;
+    }
+    
+    
+    public int[][] getdirecciones(){
+        return direcciones;
     }
     
     //Este metodo lo definira cada ficha por separado

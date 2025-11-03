@@ -12,6 +12,17 @@ public class NecroMancer extends Ficha {
     public NecroMancer(){
         super(4,3,1,3);
         super.setImageIcon("src\\resources\\deathIcon.png");
+        int[][] dirNecro= {
+            {-1,0}, //arriba
+            {1,0},//abajo
+            {0,-1},//izquierda
+            {0,1},//derecha
+            {-1,-1}, //esquina superior izquierda
+            {-1,1},//esquina superior derecha
+            {1,-1},//esquina inferior izquierda
+            {1,1}//esquina inferiro derecha
+        };
+        super.direcciones=dirNecro;
     }
     
     
