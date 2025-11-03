@@ -51,8 +51,8 @@ public class generadorTablero extends JPanel implements MouseListener {
     
     
     //Creacion de objeto de RULETA
-    ruletaGen ruletaJUGADOR = new ruletaGen();
-    ruletaGen ruletaCONTRICANTE = new ruletaGen();
+    ruletaGen ruletaJUGADOR = new ruletaGen(this);
+    ruletaGen ruletaCONTRICANTE = new ruletaGen(this);
  
     private int typFichaActual=0;//variable que lleva control del tipo de ficha que salio de la ruleta
     
@@ -111,6 +111,13 @@ public class generadorTablero extends JPanel implements MouseListener {
         int anchoCelda =getWidth()/columnas;
         int alturaCelda= getHeight()/filas;
         
+         if(turnos){
+            typFichaActual=ruletaJUGADOR.getLastSelected();
+        }else{
+            typFichaActual=ruletaCONTRICANTE.getLastSelected();
+        }
+        
+        
         for(int i=0; i<filas; i++){
             for(int j=0; j<columnas; j++){
                 g2.drawRect(j*tamanioCeldas, i*tamanioCeldas, tamanioCeldas, tamanioCeldas);
@@ -126,6 +133,53 @@ public class generadorTablero extends JPanel implements MouseListener {
                 int y = i*alturaCelda;
                 
                 g2.fillRect(x, y, anchoCelda, alturaCelda);
+                
+                
+               
+                
+                
+                System.out.println("Ficha actual:"+typFichaActual);
+                
+                if(tableroLogico[i][j]!= null && fichaOnHold== null  && tableroLogico[i][j].getTypeFicha()==typFichaActual ){
+                    if(turnos==true){
+                        if(tableroLogico[i][j].getBando().equals("JUGADOR")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            //ruletaJUGADOR.genVisuals();
+                        }
+                    }else if(turnos==false){
+                        if(tableroLogico[i][j].getBando().equals("CONTRARIO")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            
+                        }
+                    }
+                }
+                
+                
+                
+                //FIX THIS
+                /*
+                if(fichaOnHold!=null && fichaOnHold.getTypeFicha()==typFichaActual){
+                    if(turnos==true){
+                        if(tableroLogico[i][j].getBando().equals("JUGADOR")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            //ruletaJUGADOR.genVisuals();
+                        }
+                    }else if(turnos==false){
+                        if(tableroLogico[i][j].getBando().equals("CONTRARIO")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            
+                        }
+                    }
+                }
+                
+                */
+                
+                
+                
                 
                 //REALIZAR UN BLOQUE DE CODE QUE PINTE LAS CASILLAS DONDE SE ENCUENTRE EL TIPO DE FICHA SELECCIONADA
                 

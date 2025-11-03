@@ -33,9 +33,11 @@ public class ruletaGen {
     private ImageIcon nullIcon;
     
     private int lastSelected=0;
-   
+    private JPanel panel;
     
-    public ruletaGen(){
+    public ruletaGen(JPanel panel){
+        this.panel=panel;
+      //this.panel=panel;
       rand = new Random();
       favorabilidadActiva= new HashMap<>();
       favorabilidadActiva.put(1, 2);//Wolf      (TIPO FICHA, CANTIDAD DE ESA FICHA)
@@ -60,6 +62,7 @@ public class ruletaGen {
     
     
     public int girarRuleta(){
+        
         int resultado = rand.nextInt(espacioMuestralFijo)+1;
         
         int favAcumulada=0;
@@ -209,6 +212,7 @@ public class ruletaGen {
                       break;
               }
               
+              panel.repaint();
               iniciarTempoCierre();
           }
                     

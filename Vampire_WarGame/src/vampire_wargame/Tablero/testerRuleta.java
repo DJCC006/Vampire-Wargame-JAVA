@@ -17,7 +17,7 @@ public class testerRuleta {
     private ruletaGen ruletaJugador;
     
     public testerRuleta(){
-       ruletaJugador = new ruletaGen();
+       //ruletaJugador = new ruletaGen();
     }
     
     
