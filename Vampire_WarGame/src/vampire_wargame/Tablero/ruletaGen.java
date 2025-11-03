@@ -156,6 +156,32 @@ public class ruletaGen {
     }
     
     
+    private void iniciarTempoCierre(){
+        //Timer para que se cierre automaticamente la ventana una vez se obtiene el intento
+        Timer timer = new Timer(2000, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
+                screen.dispose();
+                ((Timer)e.getSource()).stop();
+            }         
+        });
+              
+        timer.setRepeats(false);
+        timer.start();
+    }
+            
+    public int getLastSelected(){
+        return lastSelected;
+    }
+    
+    
+    public void cleanLastSelected(){
+        lastSelected=5;
+    }
+    
+    
+    
+    //ELEMENTOS DE GENERACION VISUAL
     public void genVisuals(){
        screen.setSize(800, 600);  //Tamaño standard para menus
        screen.setResizable(false);
@@ -226,26 +252,5 @@ public class ruletaGen {
         screen.dispose();
     }
     
-    private void iniciarTempoCierre(){
-        //Timer para que se cierre automaticamente la ventana una vez se obtiene el intento
-        Timer timer = new Timer(2000, new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
-                screen.dispose();
-                ((Timer)e.getSource()).stop();
-            }         
-        });
-              
-        timer.setRepeats(false);
-        timer.start();
-    }
-            
-    public int getLastSelected(){
-        return lastSelected;
-    }
     
-    
-    public void cleanLastSelected(){
-        lastSelected=5;
-    }
 }
