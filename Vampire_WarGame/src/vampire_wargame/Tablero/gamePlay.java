@@ -18,23 +18,34 @@ public class gamePlay {
     public gamePlay(){
         SwingUtilities.invokeLater(()-> {
             JFrame screen = new JFrame();
-            screen.setSize(1000, 800);  //Tamaño standard para menus
+            screen.setSize(2000, 900);  //Tamaño standard para menus
             screen.setResizable(false);
             screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             screen.setLocationRelativeTo(null);
-            //screen.setLayout(null);
+            screen.setLayout(null);
 
-
-            generadorTablero tablero = new generadorTablero(110);
+            JPanel ruletaPanel = new JPanel();
+            ruletaGen generadorRuleta= new ruletaGen(ruletaPanel);
+            
+            generadorTablero tablero = new generadorTablero(100, generadorRuleta);
+            generadorRuleta.setTablero(tablero);
             JPanel panelTablero = new JPanel();
+            panelTablero.setBounds(400, 10, 800, 600);
+            //panelTablero.setBackground(Color.red);
             panelTablero.add(tablero);
-            panelTablero.setBounds(200, 100, 800, 600);
             
             
             
+            
+            
+            ruletaPanel.setLayout(null);
+            ruletaPanel.add(generadorRuleta);
+            ruletaPanel.setBounds(60, 10, 350, 400);
+            //ruletaPanel.setBackground(Color.red);
+            
 
 
-
+            screen.add(ruletaPanel);
             screen.add(panelTablero);
             screen.setVisible(true);
         });

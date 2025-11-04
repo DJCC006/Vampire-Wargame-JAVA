@@ -46,19 +46,21 @@ public class generadorTablero extends JPanel implements MouseListener {
     
     
     //Tablero logico
-    Ficha[][] tableroLogico = new Ficha[6][6];
+    private Ficha[][] tableroLogico = new Ficha[6][6];
     private ArrayList<Point> casillasDisponibles = new ArrayList<>(); //Guarda las coordenadas de las casillas que se remarcaran
     
     
     //Creacion de objeto de RULETA
-    ruletaGen ruletaJUGADOR = new ruletaGen(this);
-    ruletaGen ruletaCONTRICANTE = new ruletaGen(this);
+    //ruletaGen ruletaJUGADOR = new ruletaGen(this);
+    //ruletaGen ruletaCONTRICANTE = new ruletaGen(this);
+    private ruletaGen ruletaGeneral;
  
     private int typFichaActual=0;//variable que lleva control del tipo de ficha que salio de la ruleta
     
     
     
-    public generadorTablero(int tamanioCeldas){
+    public generadorTablero(int tamanioCeldas, ruletaGen ruleta){
+        ruletaGeneral= ruleta;
         this.tamanioCeldas= tamanioCeldas;
         setPreferredSize(new Dimension(columnas * tamanioCeldas, filas*tamanioCeldas));
         addMouseListener(this);//agregar el listener de los clicks
@@ -95,7 +97,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         
         System.out.println("TURNO JUGADOR");  
-        ruletaJUGADOR.genVisuals();
+        //ruletaJUGADOR.genVisuals();
     }
     
     @Override
@@ -111,11 +113,13 @@ public class generadorTablero extends JPanel implements MouseListener {
         int anchoCelda =getWidth()/columnas;
         int alturaCelda= getHeight()/filas;
         
+        
          if(turnos){
-            typFichaActual=ruletaJUGADOR.getLastSelected();
+            typFichaActual=ruletaGeneral.getLastSelected();
         }else{
-            typFichaActual=ruletaCONTRICANTE.getLastSelected();
+            typFichaActual=ruletaGeneral.getLastSelected();
         }
+
         
         
         for(int i=0; i<filas; i++){
@@ -233,11 +237,13 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         
         //Obtencion de info de tipo de ficha seleccionada
+        
         if(turnos){
-            typFichaActual=ruletaJUGADOR.getLastSelected();
+            typFichaActual=ruletaGeneral.getLastSelected();
         }else{
-            typFichaActual=ruletaCONTRICANTE.getLastSelected();
+            typFichaActual=ruletaGeneral.getLastSelected();
         }
+
         
         System.out.println("TIPO DE FICHA A JUGAR:"+typFichaActual);
         
@@ -329,24 +335,25 @@ public class generadorTablero extends JPanel implements MouseListener {
                             //reseteo de seleccion
                             filaSeleccionada=-1;
                             columnaSeleccionada=-1;
-                            ruletaJUGADOR.cleanLastSelected();
-                            ruletaCONTRICANTE.cleanLastSelected();
+                            
+                            ruletaGeneral.cleanLastSelected();
+                            ruletaGeneral.cleanLastSelected();
+                            
                             casillasDisponibles.clear();
                             repaint();
                             
                             //CAMBIO DE BANDOS
                             if(turnos==true){
                                 turnos=false;
-                                ruletaCONTRICANTE.genVisuals();
+                                ruletaGeneral.setTurnos(turnos);
                                 System.out.println("TURNO CONTRICANTE");
+                                
                             }else{
                                 turnos=true;
-                                ruletaJUGADOR.genVisuals();
+                                ruletaGeneral.setTurnos(turnos);
                                 System.out.println("TURNO JUGADOR");
+                                
                             }
-                            
-                            
-                            
                             break;
                        }
                    }
@@ -403,13 +410,6 @@ public class generadorTablero extends JPanel implements MouseListener {
             int filaNueva= fila +cords[0];
             int columnaNueva = columna +cords[1];
             
-//            if(typFichaActual==1){
-//                filaNueva+=1;
-//                columnaNueva+=1;
-//            }
-            
-            
-            
             //Verificacion que este dentro de los parametros del tablero
             if(filaNueva>=0 && filaNueva< tableroLogico.length && columnaNueva>=0 && columnaNueva< tableroLogico[0].length){
                 
@@ -426,16 +426,18 @@ public class generadorTablero extends JPanel implements MouseListener {
     
     private void cargarRuleta(){
         if(turnos){
-            ruletaJUGADOR.genVisuals();
+            //ruletaJUGADOR.genVisuals();
             System.out.println("GENERANDO RULETA JUGADOR");
         }else{
-            ruletaCONTRICANTE.genVisuals();
+            //ruletaCONTRICANTE.genVisuals();
             System.out.println("GENERANDO RUELTA CONTRICANTE");
         }
     }
     
    
-    
+    public void setTypFicha(int typ){
+        typFichaActual=typ;
+    }
     
     
     
