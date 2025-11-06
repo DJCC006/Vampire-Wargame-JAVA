@@ -206,11 +206,26 @@ public class generadorTablero extends JPanel implements MouseListener {
         }
         
         //Pintar las casillas de seleccion
-        g2.setColor(new Color(0,255,0,100));
+        
         for(Point p: casillasDisponibles){
+            g2.setColor(new Color(0,255,0,100));
             int x = p.y*anchoCelda;
             int y = p.x*alturaCelda;
             g2.fillRect(x, y, anchoCelda, alturaCelda);
+            
+            if(tableroLogico[p.x][p.y]!=null){
+                if(turnos){
+                    if(fichaOnHold!=null && tableroLogico[p.x][p.y].getBando().equals("CONTRARIO")){
+                            g2.setColor(new Color(255,102,102,100));
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                        }
+                }else{
+                    if(fichaOnHold!= null && tableroLogico[p.x][p.y].getBando().equals("JUGADOR")){ 
+                        g2.setColor(new Color(255,102,102,100));
+                        g2.fillRect(x, y, anchoCelda, alturaCelda);
+                    }
+                }
+            } 
         }
     }
 
@@ -275,6 +290,9 @@ public class generadorTablero extends JPanel implements MouseListener {
                             //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             
                              if(revYAtaque()){
+                                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                                    msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                }
                                 turnos=false;
                                 ruletaGeneral.setTurnos(turnos);
                                 msgCambioTurnos(turnos, pTurnos);    
@@ -317,6 +335,10 @@ public class generadorTablero extends JPanel implements MouseListener {
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             if(revYAtaque()){
+                                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                                    msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                }
+                                
                                 turnos=true;
                                 ruletaGeneral.setTurnos(turnos);
                                 msgCambioTurnos(turnos, pTurnos);    
@@ -527,6 +549,25 @@ public class generadorTablero extends JPanel implements MouseListener {
     }
     
     
+    private void msgAtaqueBasic(JPanel panel, Ficha atacante, Ficha atacado){
+        JLabel texto= new JLabel();
+        if(turnos){
+            panel.removeAll();
+            texto.setText(atacante.getName()+" ha atacado a "+atacado.getName()
+                            +"\nStats de "+atacado.getName()+": HP-"+atacado.getVida()+" SHD: "+atacado.getEscudo());
+            panel.add(texto);
+            texto.setBounds(100, 5, 600, 100);
+            texto.setFont(new Font("Serif", Font.BOLD, 18));
+        }else{
+            panel.removeAll();
+            texto.setText(atacante.getName()+" ha atacado a "+atacado.getName()
+                            +"\nStats de "+atacado.getName()+": HP-"+atacado.getVida()+" SHD: "+atacado.getEscudo());
+            panel.add(texto);
+            texto.setBounds(100, 5, 600, 100);
+            texto.setFont(new Font("Serif", Font.BOLD, 18));
+        }
+    }
+    
     
     private boolean revYAtaque(){
         for(Point p:casillasDisponibles){
@@ -542,21 +583,46 @@ public class generadorTablero extends JPanel implements MouseListener {
                     if(turnos){
                         if(fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
                             fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                            System.out.println("Se ha realizado un ataque");
-                            System.out.println("STATS DE CONTRICANTE:"
+                            
+                            if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
+                                    System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                }else{
+                                    System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                };
+                                tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                return true;
+                            }else{
+                                System.out.println("Se ha realizado un ataque");
+                                System.out.println("STATS DE CONTRICANTE:"
                                 + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
                                 +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
-                            return true;
+                                return true;
+                            }
+                            
                             
                         }
                     }else{
                         if(fichaOnHold!= null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                             fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                            System.out.println("Se ha realizado un ataque");
-                            System.out.println("STATS DE CONTRICANTE:"
+                            
+                            if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
+                                    System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                }else{
+                                    System.out.println("YA NO HAY FICHAS DE ESTE TIPO EN LA RULETA");
+                                };
+                                tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                return true;
+                            }else{
+                                System.out.println("Se ha realizado un ataque");
+                                System.out.println("STATS DE CONTRICANTE:"
                                 + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
                                 +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
-                            return true;
+                                return true;
+                            }
                         }
                     }
                                 

@@ -110,6 +110,22 @@ public class ruletaGen extends JPanel {
                   case 0:
                       texto.setIcon(nullIcon);
                       System.out.println("RESULTADO: ESPACIO VACIO");
+                      int extra= manejarResultadoNulo();
+                      switch(extra){
+                          case 1:
+                              texto.setIcon(wolfImag);
+                              System.out.println("RESULTADO EXTRA: HOMBRE LOBO");
+                              break;
+                              
+                          case 2:
+                              texto.setIcon(vampImag);
+                              System.out.println("RESULTADO EXTRA: VAMPIRO");
+                              break;
+                          case 3:
+                              texto.setIcon(necroImag);
+                              System.out.println("RESULTADO EXTRA: NECROMANCER");
+                              break;
+                      }
                       break;
               }
                   

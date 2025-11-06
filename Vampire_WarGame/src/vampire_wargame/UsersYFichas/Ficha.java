@@ -18,6 +18,7 @@ public abstract class Ficha {
     protected ImageIcon icon;
     protected String bando;
     protected int Type;
+    protected String name;
     
     public Ficha(int Vida, int Ataque, int Escudo, int Type){
         this.ptAtaque=Ataque;
@@ -81,6 +82,14 @@ public abstract class Ficha {
     
     public int getEscudo(){
         return ptEscudo;
+    }
+    
+    public String getName(){
+        return name;
+    }
+    
+    public void setName(String name){
+        this.name= name;
     }
     
     //Este metodo lo definira cada ficha por separado

@@ -23,6 +23,7 @@ public class NecroMancer extends Ficha {
             {1,1}//esquina inferiro derecha
         };
         super.direcciones=dirNecro;
+        super.setName("NECROMANCER");
     }
     
     

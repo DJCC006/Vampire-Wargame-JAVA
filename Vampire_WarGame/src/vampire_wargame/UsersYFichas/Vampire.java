@@ -24,6 +24,7 @@ public class Vampire extends Ficha{
             {1,1}//esquina inferiro derecha
         };
         super.direcciones=dirVamp;
+        super.setName("VAMPIRO");
     }
     
     @Override

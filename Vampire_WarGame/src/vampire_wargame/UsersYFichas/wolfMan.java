@@ -33,6 +33,7 @@ public class wolfMan extends Ficha{
             {2,2}//esquina inferiro derecha
         };
         super.direcciones=dirWolf;
+        super.setName("HOMBRE LOBO");
     };
     
     
