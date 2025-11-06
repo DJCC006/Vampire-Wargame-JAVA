@@ -13,14 +13,22 @@ public class NecroMancer extends Ficha {
         super(4,3,1,3);
         super.setImageIcon("src\\resources\\deathIcon.png");
         int[][] dirNecro= {
-            {-1,0}, //arriba
+            {-1,0}, //arriba   y,x
+            {-2,0},
             {1,0},//abajo
+            {2,0},
             {0,-1},//izquierda
+            {0,-2},
             {0,1},//derecha
+            {0,2},//derecha
             {-1,-1}, //esquina superior izquierda
+            {-2,-2}, //esquina superior izquierda
             {-1,1},//esquina superior derecha
+            {-2,2},//esquina superior derecha
             {1,-1},//esquina inferior izquierda
-            {1,1}//esquina inferiro derecha
+            {2,-2},//esquina inferior izquierda
+            {1,1},//esquina inferiro derecha
+            {2,2}//esquina inferiro derecha
         };
         super.direcciones=dirNecro;
         super.setName("NECROMANCER");
@@ -29,7 +37,9 @@ public class NecroMancer extends Ficha {
     
     @Override
     public void ataqueEspecial(Ficha ficha) {
-        
+        if(ficha.ptVida>=0){
+            ficha.ptVida-=2;
+        }
     }
     
 }

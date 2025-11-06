@@ -370,7 +370,29 @@ public class generadorTablero extends JPanel implements MouseListener {
                        int pY= p.y;
                        
                        if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
-                            //Movimiento General
+                           
+                           
+                           boolean movimientoValido=true;
+                           
+                           if(fichaOnHold!= null && fichaOnHold.getName().equals("NECROMANCER")){
+                               int fOrigen = previousX;
+                               int cOrigen = previousY;
+                               
+                               int fDestino = filaSeleccionada;
+                               int cDestino = columnaSeleccionada;
+                               
+                               if(tableroLogico[fDestino][cDestino]==null){
+                                   if(Math.abs(fDestino-fOrigen)>1 || Math.abs(cDestino -cOrigen)>1){
+                                       movimientoValido=false;
+                                       System.out.println("CASILLA FUERA DEL RANGO DE MOVIMIENTO VALIDO DEL NECROMANCER");
+                                   }
+                               }
+                           }
+                           
+                           
+                           System.out.println("Movimeinto valido: "+movimientoValido);
+                           if(movimientoValido){
+                             //Movimiento General
                              tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
                                 msgMovimiento(filaSeleccionada, columnaSeleccionada, fichaOnHold.getTypeFicha(),pAnuncios);
                                 tableroLogico[previousX][previousY]= null;
@@ -400,7 +422,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     //System.out.println("TURNO JUGADOR");
 
                                 }
-                                break;
+                                break;  
+                           } 
                        }
                    }
                    
@@ -451,6 +474,8 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         int[][] direcciones=fichaOnHold.getdirecciones();
         
+        
+        //Calculo normal de posiciones validas
         for(int[] cords: direcciones){
             
             int filaNueva= fila +cords[0];
@@ -472,6 +497,23 @@ public class generadorTablero extends JPanel implements MouseListener {
                             casillasDisponibles.add(new Point(filaNueva, columnaNueva));
                         } 
                     }
+                }
+            }
+        }
+        
+        
+        //logica 
+        if(fichaOnHold.getName().equals("NECROMANCER")){
+            for(int i=0; i< tableroLogico.length; i++){
+                for(int j=0; j<tableroLogico[0].length; j++){
+                    
+                    if(i==fila && j== columna){
+                        continue;
+                    }
+                    if(tableroLogico[i][j]==null){
+                        casillasDisponibles.add(new Point(i,j));
+                    }
+                    
                 }
             }
         }
@@ -575,62 +617,117 @@ public class generadorTablero extends JPanel implements MouseListener {
             int pY= p.y;
                        
             if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
-                //Movimiento
+                
                             
-                //Check up de si hay una ficha enemiga
-                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
-                   System.out.println("Detecto que hay una ficha aqui");
-                    if(turnos){
-                        if(fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
-                            fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                            
-                            if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
-                                System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
-                                if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
-                                    System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
-                                }else{
-                                    System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
-                                };
-                                tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
-                                return true;
-                            }else{
-                                System.out.println("Se ha realizado un ataque");
-                                System.out.println("STATS DE CONTRICANTE:"
-                                + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
-                                +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
-                                return true;
-                            }
-                            
-                            
-                        }
+                //Revision previo a ataque
+                int filaOrigen = previousX;
+                int columnaOrigen = previousY;
+                
+                int diffFila = Math.abs(filaSeleccionada-filaOrigen);
+                int diffColumna = Math.abs(columnaSeleccionada-columnaOrigen);
+                
+                boolean ataqueValido=false;
+                
+                if(fichaOnHold!= null && fichaOnHold.getName().equals("NECROMANCER")){
+                    if((diffFila<=2 && diffColumna<=2)&& (diffFila+diffColumna>0)){
+                        ataqueValido=true;
                     }else{
-                        if(fichaOnHold!= null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
-                            fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                            
-                            if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
-                                System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
-                                if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
-                                    System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
-                                }else{
-                                    System.out.println("YA NO HAY FICHAS DE ESTE TIPO EN LA RULETA");
-                                };
-                                tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
-                                return true;
-                            }else{
-                                System.out.println("Se ha realizado un ataque");
-                                System.out.println("STATS DE CONTRICANTE:"
-                                + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
-                                +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
-                                return true;
-                            }
-                        }
+                        System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
+                        return false;
                     }
-                                
+                }else{
+                    ataqueValido=true;
                 }
+                
+                if(ataqueValido){
+                     //Check up de si hay una ficha enemiga
+                    if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                       System.out.println("Detecto que hay una ficha aqui");
+                        if(turnos){
+                            if(fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
+                                //Revision de necromancer
+                                if(fichaOnHold.getName().equals("NECROMANCER")){
+                                    //Evaluacion de dsitancia aqui
+                                    int distanciaMax= Math.max(diffFila, diffColumna);
+                                    
+                                    if(distanciaMax==2){
+                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("NEGROMANCER Y Se ha realizado EL ATAQUE ESPECIAL LANZA");
+                                    }else if(distanciaMax==1){
+                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
+                                        
+                                    }
+                                }else{
+                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                    System.out.println("ATAQUE NORMAL NO NEGROMANCER");
+                                }
+                                
+                                //REVISION DE ELIMINACION 
+                                if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                    System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                    if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
+                                        System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                    }else{
+                                        System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                    }
+                                    tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                    return true;
+                                }else{
+                                    System.out.println("STATS DE CONTRICANTE:"
+                                    + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                    +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                    return true;
+                                }
+
+
+                            }
+                        }else{
+                            if(fichaOnHold!= null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
+                                 if(fichaOnHold.getName().equals("NECROMANCER")){
+                                    int distanciaMax= Math.max(diffFila, diffColumna);
+                                    
+                                    if(distanciaMax==2){
+                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("NEGROMANCER Y Se ha realizado EL ATAQUE ESPECIAL LANZA");
+                                    }else if(distanciaMax==1){
+                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
+                                        
+                                    }
+                                }else{
+                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                    System.out.println("ATAQUE NORMAL NO NEGROMANCER");
+                                }
+                                
+                                //REVISION DE ELIMINACION 
+                                if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                    System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                    if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
+                                        System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                    }else{
+                                        System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                    }
+                                    tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                    return true;
+                                }else{
+                                    
+                                    System.out.println("STATS DE CONTRICANTE:"
+                                    + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                    +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                    return true;
+                                }
+                            }
+                        }//cierre if de turnos
+                    }
+                }//cierre ataque valido
+                
+               
             }
-        }
-        
-        return false;
+        }    
+       return false;  
     }
+    
+    
     
 }
