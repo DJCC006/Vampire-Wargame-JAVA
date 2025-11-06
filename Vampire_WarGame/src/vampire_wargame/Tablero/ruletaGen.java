@@ -75,7 +75,7 @@ public class ruletaGen extends JPanel {
        btGirar.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              ImprimirProbabilidades();
+              //ImprimirProbabilidades();
               
               System.out.println("");
               int resultado = girarRuleta();

@@ -31,7 +31,15 @@ public class gamePlay {
             JPanel ruletaPanel = new JPanel();
             ruletaGen generadorRuleta= new ruletaGen(ruletaPanel);
             
-            generadorTablero tablero = new generadorTablero(100, generadorRuleta);
+            //Creadores de otras cosas que requiere el tablero
+            JPanel panelAnuncios = new JPanel();
+            panelAnuncios.setLayout(null);
+            JPanel cementerioPlayer = new JPanel();
+            JPanel cementerioContricante = new JPanel();
+            
+            JPanel panelTurnos = new JPanel();
+            
+            generadorTablero tablero = new generadorTablero(100, generadorRuleta, panelAnuncios, cementerioPlayer, cementerioContricante, panelTurnos);
             generadorRuleta.setTablero(tablero);
             JPanel panelTablero = new JPanel();
             panelTablero.setBounds(400, 10, 800, 600);
@@ -46,23 +54,30 @@ public class gamePlay {
             ruletaPanel.add(generadorRuleta);
             ruletaPanel.setBounds(60, 10, 350, 400);
             
-            JPanel panelAnuncios = new JPanel();
+            
             panelAnuncios.setBounds(500, 650, 600, 100);
             panelAnuncios.setBackground(Color.GRAY);
             
             //DISPLAYERS DE PLAYERS
-            JPanel cementerioPlayer = new JPanel();
+            
             cementerioPlayer.setBounds(1140, 100, 350, 300);
             cementerioPlayer.setBackground(Color.GRAY);
+            
+            panelTurnos.setBackground(Color.GRAY);
+            panelTurnos.setBounds(60, 400, 350, 80);
+            
             
             JLabel gravePlayerLB= new JLabel("CEMENTERIO PLAYER");
             gravePlayerLB.setBounds(1140, 30, 350, 80);
             gravePlayerLB.setFont(new Font("Serif", Font.BOLD, 30));
 
             
-            JPanel cementerioContricante = new JPanel();
+            
             cementerioContricante.setBounds(1140, 500, 350, 300);
             cementerioContricante.setBackground(Color.GRAY);
+            
+            
+            
             
             JLabel graveContriLB= new JLabel("CEMENTERIO CONTRICANTE");
             graveContriLB.setBounds(1140, 440, 350, 80);
@@ -73,6 +88,7 @@ public class gamePlay {
             JButton rendirseBT= new JButton("RENDIRSE");
             rendirseBT.setBounds(60, 500, 300, 80);
             
+            screen.add(panelTurnos);
             screen.add(rendirseBT);
             screen.add(cementerioPlayer);
             screen.add(gravePlayerLB);

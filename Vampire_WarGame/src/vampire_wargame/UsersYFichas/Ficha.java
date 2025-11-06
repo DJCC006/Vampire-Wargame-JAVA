@@ -18,6 +18,7 @@ public abstract class Ficha {
     protected ImageIcon icon;
     protected String bando;
     protected int Type;
+    
     public Ficha(int Vida, int Ataque, int Escudo, int Type){
         this.ptAtaque=Ataque;
         this.ptVida=Vida;
@@ -31,13 +32,13 @@ public abstract class Ficha {
     
     
     
-    public void ataque(Ficha ficha){
+    public void ataque(Ficha ficha){ //se debe que ingresar la ficha a la que se realiza el ataque
         if(ficha.ptEscudo>0){
             if(ficha.ptEscudo> ptAtaque){
                 ficha.ptEscudo-=ptAtaque;
             }else if(ficha.ptEscudo<ptAtaque){
+                int Stack= (ficha.ptEscudo-ptAtaque)*-1;//Stack representando al daño restante que queda después de destrozar el escudo
                 ficha.ptEscudo=0;
-                int Stack= -1*(ficha.ptEscudo-ptAtaque);//Stack representando al daño restante que queda después de destrozar el escudo
                 ficha.ptVida-=Stack;
             } 
         }else if(ficha.ptEscudo==0 && ficha.ptVida>0){
@@ -72,6 +73,14 @@ public abstract class Ficha {
     
     public int[][] getdirecciones(){
         return direcciones;
+    }
+    
+    public int getVida(){
+        return ptVida;
+    }
+    
+    public int getEscudo(){
+        return ptEscudo;
     }
     
     //Este metodo lo definira cada ficha por separado

@@ -6,6 +6,7 @@ package vampire_wargame.Tablero;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.List;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import vampire_wargame.UsersYFichas.Ficha;
 import vampire_wargame.UsersYFichas.*;
@@ -58,10 +60,22 @@ public class generadorTablero extends JPanel implements MouseListener {
     private int typFichaActual=0;//variable que lleva control del tipo de ficha que salio de la ruleta
     
     
+    //Almacenadores de demas GUI con la que interactua el tablero
+    //POSIBLEMENTE PODER VOLVER ESTO A UNA INTERFAZ PARA MOSTRAR ANUNCIOS DE MANERA MAS FACIL
+    private JPanel pAnuncios;
+    private JPanel cJugador;
+    private JPanel cContricante;
+    private JPanel pTurnos;
     
-    public generadorTablero(int tamanioCeldas, ruletaGen ruleta){
+    
+    
+    public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos){
         ruletaGeneral= ruleta;
         this.tamanioCeldas= tamanioCeldas;
+        this.pAnuncios=pAnuncios;
+        this.cJugador=cJugador;
+        this.cContricante=cContricantes;
+        this.pTurnos=pTurnos;
         setPreferredSize(new Dimension(columnas * tamanioCeldas, filas*tamanioCeldas));
         addMouseListener(this);//agregar el listener de los clicks
         
@@ -96,8 +110,8 @@ public class generadorTablero extends JPanel implements MouseListener {
         tableroLogico[5][5].setBando("JUGADOR");
         
         
-        System.out.println("TURNO JUGADOR");  
-        //ruletaJUGADOR.genVisuals();
+        //System.out.println("TURNO JUGADOR");  
+        msgCambioTurnos(turnos, pTurnos);
     }
     
     @Override
@@ -142,7 +156,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                
                 
                 
-                System.out.println("Ficha actual:"+typFichaActual);
+                //System.out.println("Ficha actual:"+typFichaActual);
                 
                 if(tableroLogico[i][j]!= null && fichaOnHold== null  && tableroLogico[i][j].getTypeFicha()==typFichaActual ){
                     if(turnos==true){
@@ -160,38 +174,13 @@ public class generadorTablero extends JPanel implements MouseListener {
                     }
                 }
                 
-                
-                
-                //FIX THIS
-                /*
-                if(fichaOnHold!=null && fichaOnHold.getTypeFicha()==typFichaActual){
-                    if(turnos==true){
-                        if(tableroLogico[i][j].getBando().equals("JUGADOR")){
-                            g2.setColor(Color.RED);
-                            g2.fillRect(x, y, anchoCelda, alturaCelda);
-                            //ruletaJUGADOR.genVisuals();
-                        }
-                    }else if(turnos==false){
-                        if(tableroLogico[i][j].getBando().equals("CONTRARIO")){
-                            g2.setColor(Color.RED);
-                            g2.fillRect(x, y, anchoCelda, alturaCelda);
-                            
-                        }
-                    }
-                }
-                
-                */
-                
-                
-                
-                
                 //REALIZAR UN BLOQUE DE CODE QUE PINTE LAS CASILLAS DONDE SE ENCUENTRE EL TIPO DE FICHA SELECCIONADA
                 
                 
                 //Seleccion de casilla solo si tiene ficha 
                 if(i==filaSeleccionada && j == columnaSeleccionada && fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada]!=null && typFichaActual== fichaOnHold.getTypeFicha()){
                     
-                    System.out.println("FICHA ON HOLD: "+fichaOnHold.getTypeFicha());
+                    //System.out.println("FICHA ON HOLD: "+fichaOnHold.getTypeFicha());
                     //Seleccion condicionada al turno actual
                     if(turnos==true){
                         if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
@@ -253,7 +242,7 @@ public class generadorTablero extends JPanel implements MouseListener {
             if(fila==filaSeleccionada && columna == columnaSeleccionada){
                 filaSeleccionada=-1;
                 columnaSeleccionada=-1;
-                System.out.println("Casilla Deseleccionada");
+                System.out.println("Casilla Deseleccionada: MISMA FICHA");
                 casillasDisponibles.clear();
                 repaint();
             }else{
@@ -278,18 +267,35 @@ public class generadorTablero extends JPanel implements MouseListener {
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
-                                System.out.println("Casilla Deseleccionada");
+                                System.out.println("Casilla Deseleccionada: FICHA NO DEL TIPO OBTENIDO");
                                 casillasDisponibles.clear();
                                 repaint();
                             }
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
                             //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
-                            filaSeleccionada=-1;
-                            columnaSeleccionada=-1;
                             
-                            System.out.println("Casilla Deseleccionada");
-                            casillasDisponibles.clear();
-                            repaint();
+                             if(revYAtaque()){
+                                turnos=false;
+                                ruletaGeneral.setTurnos(turnos);
+                                msgCambioTurnos(turnos, pTurnos);    
+                                fichaOnHold=null;
+                                seleccion=false;
+                                ruletaGeneral.cleanLastSelected();
+                                casillasDisponibles.clear();
+                                repaint();
+                                 
+                                 
+                                 
+                             }else{
+                                filaSeleccionada=-1;
+                                columnaSeleccionada=-1;
+
+                                System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
+                                casillasDisponibles.clear();
+                                repaint();
+                             }
+                             
+                            
                        }
                    }else if(turnos==false){
                        if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
@@ -304,57 +310,75 @@ public class generadorTablero extends JPanel implements MouseListener {
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
-                                System.out.println("Casilla Deseleccionada");
+                                System.out.println("Casilla Deseleccionada: FICHA NO DEL TIPO OBTENIDO");
                                 casillasDisponibles.clear();
                                 repaint();
                             }
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
-                            filaSeleccionada=-1;
-                            columnaSeleccionada=-1;
-                            
-                            System.out.println("Casilla Deseleccionada");
-                            casillasDisponibles.clear();
-                            repaint();
+                            if(revYAtaque()){
+                                turnos=true;
+                                ruletaGeneral.setTurnos(turnos);
+                                msgCambioTurnos(turnos, pTurnos);    
+                                fichaOnHold=null;
+                                seleccion=false;
+                                ruletaGeneral.cleanLastSelected();
+                                casillasDisponibles.clear();
+                                repaint();
+                                 
+                                 
+                                 
+                             }else{
+                                filaSeleccionada=-1;
+                                columnaSeleccionada=-1;
+
+                                System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
+                                casillasDisponibles.clear();
+                                repaint();
+                             }
                        }
                        
                    }
                    
                }else{
                    
+                   //Seleccion de movimiento
                    for(Point p:casillasDisponibles){
                        int pX= p.x;
                        int pY= p.y;
                        
-                       if(filaSeleccionada==pX && columnaSeleccionada==pY){
-                            //Movimiento
-                            tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
-                            tableroLogico[previousX][previousY]= null;
-                            fichaOnHold=null;
-                            seleccion=false;
-                            //reseteo de seleccion
-                            filaSeleccionada=-1;
-                            columnaSeleccionada=-1;
-                            
-                            ruletaGeneral.cleanLastSelected();
-                            ruletaGeneral.cleanLastSelected();
-                            
-                            casillasDisponibles.clear();
-                            repaint();
-                            
-                            //CAMBIO DE BANDOS
-                            if(turnos==true){
-                                turnos=false;
-                                ruletaGeneral.setTurnos(turnos);
-                                System.out.println("TURNO CONTRICANTE");
-                                
-                            }else{
-                                turnos=true;
-                                ruletaGeneral.setTurnos(turnos);
-                                System.out.println("TURNO JUGADOR");
-                                
-                            }
-                            break;
+                       if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
+                            //Movimiento General
+                             tableroLogico[filaSeleccionada][columnaSeleccionada]=fichaOnHold;
+                                msgMovimiento(filaSeleccionada, columnaSeleccionada, fichaOnHold.getTypeFicha(),pAnuncios);
+                                tableroLogico[previousX][previousY]= null;
+                                fichaOnHold=null;
+                                seleccion=false;
+                                //reseteo de seleccion
+                                filaSeleccionada=-1;
+                                columnaSeleccionada=-1;
+
+                                ruletaGeneral.cleanLastSelected();
+                                ruletaGeneral.cleanLastSelected();
+
+                                casillasDisponibles.clear();
+                                repaint();
+
+                                //CAMBIO DE BANDOS
+                                if(turnos==true){
+                                    turnos=false;
+                                    ruletaGeneral.setTurnos(turnos);
+                                    msgCambioTurnos(turnos, pTurnos);
+                                    //System.out.println("TURNO CONTRICANTE");
+
+                                }else{
+                                    turnos=true;
+                                    ruletaGeneral.setTurnos(turnos);
+                                    msgCambioTurnos(turnos, pTurnos);
+                                    //System.out.println("TURNO JUGADOR");
+
+                                }
+                                break;
                        }
                    }
                    
@@ -363,7 +387,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                     filaSeleccionada=-1;
                     columnaSeleccionada=-1;
                     
-                    System.out.println("Casilla Deseleccionada");
+                    //System.out.println("Casilla Deseleccionada");
                     casillasDisponibles.clear();
                     repaint();
                    
@@ -416,7 +440,17 @@ public class generadorTablero extends JPanel implements MouseListener {
                 //Verificar que la casilla este vacia de verdad
                 if(tableroLogico[filaNueva][columnaNueva]==null ){
                     casillasDisponibles.add(new Point(filaNueva, columnaNueva));
-                } 
+                }else{
+                    if(turnos){
+                        if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("CONTRARIO")){
+                            casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                        }
+                    }else{
+                       if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("JUGADOR")){
+                            casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                        } 
+                    }
+                }
             }
         }
         
@@ -440,5 +474,97 @@ public class generadorTablero extends JPanel implements MouseListener {
     }
     
     
+    
+    //Metodos para mostrar de anuncios
+    private void msgMovimiento(int fila, int columna, int TipoFicha, JPanel panel){
+        JLabel texto= new JLabel();
+        //System.out.println("CAMBIANDO TEXTO");
+        switch(TipoFicha){
+            case 1:
+                panel.removeAll();
+                texto.setText("se ha movido HOMBRE LOBO a casilla ["+(fila+1)+","+(columna+1)+"]");
+                panel.add(texto);
+                texto.setBounds(100, 5, 600, 100);
+                texto.setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+            case 2:
+                panel.removeAll();
+                texto.setText("se ha movido VAMPIRO a casilla ["+(fila+1)+","+(columna+1)+"]");
+                panel.add(texto);
+                texto.setBounds(100, 5, 600, 100);
+                texto.setFont(new Font("Serif", Font.BOLD, 20));
+                break;
+                
+            case 3:
+                panel.removeAll();
+                texto.setText("se ha movido NECROMANCER a casilla ["+(fila+1)+","+(columna+1)+"]");
+                panel.add(texto);
+                texto.setBounds(100, 5, 600, 100);
+                texto.setFont(new Font("Serif", Font.BOLD, 18));
+                break;
+        }
+        
+    }
+    
+    
+    
+    private void msgCambioTurnos(boolean turnos, JPanel panel){//USAR UN JPANEL APARTE PARA TURNOS
+        JLabel texto= new JLabel();
+        if(turnos){
+            panel.removeAll();
+            texto.setText("TURNO DE JUGADOR");
+            panel.add(texto);
+            texto.setBounds(100, 5, 600, 100);
+            texto.setFont(new Font("Serif", Font.BOLD, 18));
+        }else{
+            panel.removeAll();
+            texto.setText("TURNO DE CONTRICANTE");
+            panel.add(texto);
+            texto.setBounds(100, 5, 600, 100);
+            texto.setFont(new Font("Serif", Font.BOLD, 18));
+        }
+        
+    }
+    
+    
+    
+    private boolean revYAtaque(){
+        for(Point p:casillasDisponibles){
+            int pX= p.x;
+            int pY= p.y;
+                       
+            if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
+                //Movimiento
+                            
+                //Check up de si hay una ficha enemiga
+                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                   System.out.println("Detecto que hay una ficha aqui");
+                    if(turnos){
+                        if(fichaOnHold!=null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
+                            fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                            System.out.println("Se ha realizado un ataque");
+                            System.out.println("STATS DE CONTRICANTE:"
+                                + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                            return true;
+                            
+                        }
+                    }else{
+                        if(fichaOnHold!= null && tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
+                            fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                            System.out.println("Se ha realizado un ataque");
+                            System.out.println("STATS DE CONTRICANTE:"
+                                + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                            return true;
+                        }
+                    }
+                                
+                }
+            }
+        }
+        
+        return false;
+    }
     
 }
