@@ -17,6 +17,7 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import vampire_wargame.UsersYFichas.Ficha;
 import vampire_wargame.UsersYFichas.*;
@@ -364,14 +365,38 @@ public class generadorTablero extends JPanel implements MouseListener {
                    
                }else{
                    
+                   
+                   
+                   
+                   
+                   
                    //Seleccion de movimiento
                    for(Point p:casillasDisponibles){
                        int pX= p.x;
                        int pY= p.y;
                        
+                       
+                       //Spawner de zombie 
+                        if(fichaOnHold.getName().equals("NECROMANCER")){
+                            NecroMancer tempo = (NecroMancer) fichaOnHold;
+                            Object[] options= {"Si", "No"};
+                            if(tableroLogico[filaSeleccionada][columnaSeleccionada]==null){
+                                int choice= JOptionPane.showOptionDialog(this, "Generar un Zombie", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                
+                                if(choice==JOptionPane.YES_OPTION){
+                                    tempo.spawnearZombie(tableroLogico, filaSeleccionada, columnaSeleccionada);
+                                    
+                                }else if(choice==JOptionPane.NO_OPTION){
+                                    System.out.println("XD");
+                                    
+                                }
+                                
+                            }
+                        }
+                       
+                       
                        if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
-                           
-                           
+
                            boolean movimientoValido=true;
                            
                            if(fichaOnHold!= null && fichaOnHold.getName().equals("NECROMANCER")){
