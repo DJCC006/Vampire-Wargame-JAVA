@@ -197,19 +197,25 @@ public class ruletaGen extends JPanel {
         
         //Condicionado a turnos
         if(turnosControlador){
-            int favActual = favorabilidadActiva.get(tipoFicha);
+            if(tipoFicha!=4){
+               int favActual = favorabilidadActiva.get(tipoFicha);
 
-            if(favActual >0){
-                favorabilidadActiva.put(tipoFicha, favActual-1);
-                return true;
-            }     
+                if(favActual >0 && favActual<4){//menor a 4 para evitar la reduccion de zombie
+                    favorabilidadActiva.put(tipoFicha, favActual-1);
+                    return true;
+                }   
+            }
+               
         }else{
-            int favActual = fContricanteActiva.get(tipoFicha);
+            
+            if(tipoFicha!=4){
+                int favActual = fContricanteActiva.get(tipoFicha);
 
-            if(favActual >0){
-                fContricanteActiva.put(tipoFicha, favActual-1);
-                return true;
-            }  
+                if(favActual >0 && favActual<4){
+                    fContricanteActiva.put(tipoFicha, favActual-1);
+                    return true;
+                } 
+            }
         }
         return false;
     }

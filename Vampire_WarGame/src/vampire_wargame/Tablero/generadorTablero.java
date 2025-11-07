@@ -68,7 +68,8 @@ public class generadorTablero extends JPanel implements MouseListener {
     private JPanel cContricante;
     private JPanel pTurnos;
     
-    
+    private int typNecromancer=3;
+    private int typZombie=4;
     
     public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos){
         ruletaGeneral= ruleta;
@@ -153,12 +154,6 @@ public class generadorTablero extends JPanel implements MouseListener {
                 
                 g2.fillRect(x, y, anchoCelda, alturaCelda);
                 
-                
-               
-                
-                
-                //System.out.println("Ficha actual:"+typFichaActual);
-                
                 if(tableroLogico[i][j]!= null && fichaOnHold== null  && tableroLogico[i][j].getTypeFicha()==typFichaActual ){
                     if(turnos==true){
                         if(tableroLogico[i][j].getBando().equals("JUGADOR")){
@@ -174,6 +169,24 @@ public class generadorTablero extends JPanel implements MouseListener {
                         }
                     }
                 }
+                
+                //Caso especifico para zombie
+                if(tableroLogico[i][j]!= null && fichaOnHold== null  && tableroLogico[i][j].getTypeFicha()==4 && typFichaActual==3){
+                     if(turnos==true){
+                        if(tableroLogico[i][j].getBando().equals("JUGADOR")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            //ruletaJUGADOR.genVisuals();
+                        }
+                    }else if(turnos==false){
+                        if(tableroLogico[i][j].getBando().equals("CONTRARIO")){
+                            g2.setColor(Color.RED);
+                            g2.fillRect(x, y, anchoCelda, alturaCelda);
+                            
+                        }
+                    }
+                }
+                
                 
                 //REALIZAR UN BLOQUE DE CODE QUE PINTE LAS CASILLAS DONDE SE ENCUENTRE EL TIPO DE FICHA SELECCIONADA
                 
@@ -276,8 +289,21 @@ public class generadorTablero extends JPanel implements MouseListener {
                             previousX=filaSeleccionada;
                             previousY=columnaSeleccionada;
                             seleccion=true;
-
-                            if(fichaOnHold!= null && typFichaActual== fichaOnHold.getTypeFicha()){
+                            
+                            
+                            
+                            
+                            boolean esTipoCorrecto = fichaOnHold!= null && typFichaActual == fichaOnHold.getTypeFicha();
+                            
+                            if(typFichaActual == typNecromancer && fichaOnHold!= null && fichaOnHold.getTypeFicha()== typZombie){
+                                esTipoCorrecto=true;
+                            }
+                         
+                            
+                            //fichaOnHold!= null && typFichaActual== fichaOnHold.getTypeFicha()
+                            if(esTipoCorrecto){
+                                
+                                //Consideracion de que sea necromancer
                                 calcularMovimientos(filaSeleccionada, columnaSeleccionada);
                                 
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
@@ -287,6 +313,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 casillasDisponibles.clear();
                                 repaint();
                             }
+                            
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
                             //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             
@@ -323,8 +350,16 @@ public class generadorTablero extends JPanel implements MouseListener {
                             previousX=filaSeleccionada;
                             previousY=columnaSeleccionada;
                             seleccion=true;
-
-                            if(fichaOnHold!= null && typFichaActual== fichaOnHold.getTypeFicha()){
+                            
+                             boolean esTipoCorrecto = fichaOnHold!= null && typFichaActual == fichaOnHold.getTypeFicha();
+                            
+                            if(typFichaActual == typNecromancer && fichaOnHold!= null && fichaOnHold.getTypeFicha()== typZombie){
+                                esTipoCorrecto=true;
+                            }
+                         
+                            
+                            //fichaOnHold!= null && typFichaActual== fichaOnHold.getTypeFicha()
+                            if(esTipoCorrecto){
                                 calcularMovimientos(filaSeleccionada, columnaSeleccionada);
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
                                 filaSeleccionada=-1;
@@ -333,6 +368,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 casillasDisponibles.clear();
                                 repaint();
                             }
+                            
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             if(revYAtaque()){
@@ -384,7 +420,36 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 int choice= JOptionPane.showOptionDialog(this, "Generar un Zombie", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                 
                                 if(choice==JOptionPane.YES_OPTION){
-                                    tempo.spawnearZombie(tableroLogico, filaSeleccionada, columnaSeleccionada);
+                                    tempo.spawnearZombie(tableroLogico, filaSeleccionada, columnaSeleccionada,turnos);
+                                    fichaOnHold=null;
+                                    seleccion=false;
+                                    //reseteo de seleccion
+                                    filaSeleccionada=-1;
+                                    columnaSeleccionada=-1;
+
+                                    ruletaGeneral.cleanLastSelected();
+                                    ruletaGeneral.cleanLastSelected();
+
+                                    casillasDisponibles.clear();
+                                    repaint();
+
+                                    //CAMBIO DE BANDOS
+                                    if(turnos==true){
+                                        turnos=false;
+                                        ruletaGeneral.setTurnos(turnos);
+                                        msgCambioTurnos(turnos, pTurnos);
+                                        //System.out.println("TURNO CONTRICANTE");
+
+                                    }else{
+                                        turnos=true;
+                                        ruletaGeneral.setTurnos(turnos);
+                                        msgCambioTurnos(turnos, pTurnos);
+                                        //System.out.println("TURNO JUGADOR");
+
+                                    }
+                                    
+                                    
+                                    break;
                                     
                                 }else if(choice==JOptionPane.NO_OPTION){
                                     System.out.println("XD");
@@ -412,6 +477,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                                        System.out.println("CASILLA FUERA DEL RANGO DE MOVIMIENTO VALIDO DEL NECROMANCER");
                                    }
                                }
+                           }
+                           
+                           
+                           if(fichaOnHold!=null && fichaOnHold.getName().equals("ZOMBIE")){
+                               movimientoValido=false;
+                               System.out.println("NO SE PUEDE MOVER EL ZOMBIE");
                            }
                            
                            
@@ -692,7 +763,9 @@ public class generadorTablero extends JPanel implements MouseListener {
                 }
                 
                 if(ataqueValido){
-                     //Check up de si hay una ficha enemiga
+                    
+                    
+                    //Check-Up de ficha a seleccionar
                     if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
                        System.out.println("Detecto que hay una ficha aqui");
                         if(turnos){

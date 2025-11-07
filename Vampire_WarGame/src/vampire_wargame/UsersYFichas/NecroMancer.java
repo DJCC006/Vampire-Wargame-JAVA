@@ -43,8 +43,16 @@ public class NecroMancer extends Ficha {
     }
     
     
-    public void spawnearZombie(Ficha[][] tableroLogico, int fila, int columna){
-        tableroLogico[fila][columna]= new Zombie();
+    public void spawnearZombie(Ficha[][] tableroLogico, int fila, int columna, boolean turnos){
+         Zombie newZomb= new Zombie();
+        if(turnos){
+            newZomb.setBando("JUGADOR");
+            tableroLogico[fila][columna]= newZomb;
+        }else{
+            newZomb.setBando("CONTRARIO");
+            tableroLogico[fila][columna]= newZomb;
+        }
+        
         System.out.println("NUEVO ZOMBIE SPAWNEADO EN ("+fila+","+columna+")");
     }
     

@@ -24,6 +24,7 @@ public class Zombie extends Ficha{
         };
         
         super.direcciones=dirZombie;
+        super.setName("ZOMBIE");
     }
     
     @Override
