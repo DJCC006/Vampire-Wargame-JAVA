@@ -488,14 +488,34 @@ public class generadorTablero extends JPanel implements MouseListener {
                 if(tableroLogico[filaNueva][columnaNueva]==null ){
                     casillasDisponibles.add(new Point(filaNueva, columnaNueva));
                 }else{
-                    if(turnos){
-                        if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("CONTRARIO")){
-                            casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                    
+                    if(fichaOnHold.getName().equals("HOMBRE LOBO")){
+                        int diffFila = Math.abs(filaNueva-fila);
+                        int diffColumna = Math.abs(columnaNueva-columna);
+                        
+                        int distanciaMaxima =Math.max(diffFila, diffColumna);
+                        
+                        if(distanciaMaxima==1){
+                            if(turnos){
+                                if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("CONTRARIO")){
+                                   casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                                }
+                            }else{
+                                if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("JUGADOR")){
+                                    casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                                } 
+                            }
                         }
                     }else{
-                       if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("JUGADOR")){
-                            casillasDisponibles.add(new Point(filaNueva, columnaNueva));
-                        } 
+                            if(turnos){
+                                if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("CONTRARIO")){
+                                   casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                                }
+                            }else{
+                                if(tableroLogico[filaNueva][columnaNueva]!= null && tableroLogico[filaNueva][columnaNueva].getBando().equals("JUGADOR")){
+                                    casillasDisponibles.add(new Point(filaNueva, columnaNueva));
+                                } 
+                            }
                     }
                 }
             }
@@ -635,6 +655,13 @@ public class generadorTablero extends JPanel implements MouseListener {
                         System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
                         return false;
                     }
+                }else if(fichaOnHold!= null && fichaOnHold.getName().equals("HOMBRE LOBO")){
+                    if((diffFila<=1 && diffColumna<=1)&& (diffFila+diffColumna>0)){
+                        ataqueValido=true;
+                    }else{
+                        System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
+                        return false;
+                    }
                 }else{
                     ataqueValido=true;
                 }
@@ -658,6 +685,17 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
                                         
                                     }
+                                }else if(fichaOnHold.getName().equals("HOMBRE LOBO")){
+                                    int distanciaMax= Math.max(diffFila, diffColumna);
+                                    
+                                    if(distanciaMax==1){
+                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("HOMBRE LOBO  HA REALIZADO ATAQUE NORMAL");
+                                    }else{
+                                        System.out.println("ATAQUE NO VALIDO PARA HOMBRE LOBO");
+                                        return false;
+                                    }
+                                    
                                 }else{
                                     fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                     System.out.println("ATAQUE NORMAL NO NEGROMANCER");
@@ -695,6 +733,17 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
                                         
                                     }
+                                }else if(fichaOnHold.getName().equals("HOMBRE LOBO")){
+                                    int distanciaMax= Math.max(diffFila, diffColumna);
+                                    
+                                    if(distanciaMax==1){
+                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        System.out.println("HOMBRE LOBO  HA REALIZADO ATAQUE NORMAL");
+                                    }else{
+                                        System.out.println("ATAQUE NO VALIDO PARA HOMBRE LOBO");
+                                        return false;
+                                    }
+                                    
                                 }else{
                                     fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                     System.out.println("ATAQUE NORMAL NO NEGROMANCER");
