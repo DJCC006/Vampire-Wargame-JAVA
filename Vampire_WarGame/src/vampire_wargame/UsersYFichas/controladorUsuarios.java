@@ -33,6 +33,15 @@ public class controladorUsuarios {
     }
     
     
+    public Usuario buscarUsuario(String name){
+        for(Usuario user: DBUsuarios){
+            if(user.getUsername().equals(name)){
+                return user;
+            }
+        }
+        return null;
+    }
+    
     
     
 }

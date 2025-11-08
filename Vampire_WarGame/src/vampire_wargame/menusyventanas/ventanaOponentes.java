@@ -8,9 +8,13 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import vampire_wargame.Tablero.gamePlay;
+import vampire_wargame.UsersYFichas.Usuario;
+import vampire_wargame.UsersYFichas.controladorLogged;
+import vampire_wargame.UsersYFichas.controladorUsuarios;
 
 /**
  *
@@ -28,9 +32,17 @@ public class ventanaOponentes {
         
         JLabel titulo = new JLabel("SELECCIONE SU OPONENTE");
         titulo.setBounds(100, 50, 700, 100);
-        titulo.setFont(new Font("Serif", Font.BOLD, 50));
+        titulo.setFont(new Font("Serif", Font.BOLD, 40));
         
-  
+        JComboBox<String> Usernames = new JComboBox<>();
+        Usernames.setBounds(100, 150, 200, 25);
+        for(Usuario user: controladorUsuarios.getInstancia().getDBUsers() ){
+            if(!user.getUsername().equals(controladorLogged.getInstancia().getUsuarioLogged().getUsername())){
+                String names = user.getUsername();
+                Usernames.addItem(names);
+            }
+            
+        }
         
         JButton btSalir = new JButton("Volver");
         btSalir.setBounds(500, 390, 200, 50);
@@ -43,8 +55,12 @@ public class ventanaOponentes {
         btJugar.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
+              String buscador = (String) Usernames.getSelectedItem();
+              Usuario CONTRICANTE= controladorUsuarios.getInstancia().buscarUsuario(buscador);
+              gamePlay ventana = new gamePlay(controladorLogged.getInstancia().getUsuarioLogged(), CONTRICANTE);
+              System.out.println("PLAYER: "+controladorLogged.getInstancia().getUsuarioLogged().getUsername() + " | CONTRIANTE: "+CONTRICANTE.getUsername());
               screen.dispose();
-             gamePlay ventana = new gamePlay();
+             
           }
                     
         });
@@ -60,7 +76,8 @@ public class ventanaOponentes {
                     
         });
         
-     
+        
+        screen.add(Usernames);
         screen.add(btSalir);
         screen.add(titulo);
         screen.add(btJugar);

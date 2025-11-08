@@ -5,6 +5,7 @@
 package vampire_wargame.UsersYFichas;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
 /**
  *
@@ -16,7 +17,7 @@ public class Usuario {
     private int points;
     private String fechaIngreso;//Se forma despues de convertir la fecha de calendar
     private boolean status;
-    //private Logs[] logPartidas;
+    private ArrayList<String> logPartidas;
     
     
     //Inicializacion de objeto de Calendar
@@ -31,6 +32,7 @@ public class Usuario {
         status=true;
         creacionCuenta= LocalDate.now();
         fechaIngreso=creacionCuenta.format(formatoFecha);
+        logPartidas = new ArrayList<>();
         //Proximamente linea que instancia el array de logs
     }
     
@@ -68,5 +70,16 @@ public class Usuario {
     public LocalDate getCreacionDate(){
         return creacionCuenta;
     }
+    
+    
+    public void registrarPartida(String log){
+        logPartidas.add(log);
+    }
+    
+    public ArrayList<String> getLogs(){
+        return logPartidas;
+    }
+    
+    
     
 }

@@ -71,7 +71,16 @@ public class generadorTablero extends JPanel implements MouseListener {
     private int typNecromancer=3;
     private int typZombie=4;
     
-    public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos){
+    
+    
+    //CONTROLADORES DE JUGADORES
+    Usuario PLAYER;
+    Usuario CONTRICANTE;
+    
+    
+    public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos, Usuario PLAYER, Usuario CONTRICANTE){
+        this.PLAYER=PLAYER;
+        this.CONTRICANTE=CONTRICANTE;
         ruletaGeneral= ruleta;
         this.tamanioCeldas= tamanioCeldas;
         this.pAnuncios=pAnuncios;
@@ -692,13 +701,13 @@ public class generadorTablero extends JPanel implements MouseListener {
         JLabel texto= new JLabel();
         if(turnos){
             panel.removeAll();
-            texto.setText("TURNO DE JUGADOR");
+            texto.setText("TURNO DE "+PLAYER.getUsername().toUpperCase());
             panel.add(texto);
             texto.setBounds(100, 5, 600, 100);
             texto.setFont(new Font("Serif", Font.BOLD, 18));
         }else{
             panel.removeAll();
-            texto.setText("TURNO DE CONTRICANTE");
+            texto.setText("TURNO DE "+CONTRICANTE.getUsername().toUpperCase());
             panel.add(texto);
             texto.setBounds(100, 5, 600, 100);
             texto.setFont(new Font("Serif", Font.BOLD, 18));
@@ -875,6 +884,8 @@ public class generadorTablero extends JPanel implements MouseListener {
        return false;  
     }
     
-    
+    public boolean getTurno(){
+        return turnos;
+    }
     
 }
