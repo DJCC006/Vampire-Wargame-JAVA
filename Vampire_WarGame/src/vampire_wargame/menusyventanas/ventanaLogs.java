@@ -10,6 +10,9 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import vampire_wargame.UsersYFichas.controladorLogged;
 
 /**
  *
@@ -30,10 +33,33 @@ public class ventanaLogs {
         titulo.setBounds(100, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
         
-  
+        
+        
+        String[] columnas= {"Logs de Partidas"};
+        int sizeActual=controladorLogged.getInstancia().getUsuarioLogged().getLogs().size();
+        
+        Object[][] data= new Object[sizeActual][];
+        
+        for(int i=0; i< sizeActual ; i++ ){
+            data[i]= new Object[1];
+            data[i][0]=controladorLogged.getInstancia().getUsuarioLogged().getLogs().get(i);
+        }
+        
+        JTable tablaLogs = new JTable( data, columnas);
+        JScrollPane panelScroll = new JScrollPane(tablaLogs);
+        panelScroll.setBounds(100, 80, 500, 300);
+        
+        
+        
+        System.out.println("LISTA DE LOGS");
+        for(String log:controladorLogged.getInstancia().getUsuarioLogged().getLogs() ){
+            System.out.println(log+"\n");
+        }
+        System.out.println("Size de logs: "+sizeActual);
+        
         
         JButton btSalir = new JButton("Volver");
-        btSalir.setBounds(500, 390, 200, 50);
+        btSalir.setBounds(500, 410, 200, 50);
         
         btSalir.addActionListener(new ActionListener(){
           @Override 
@@ -44,7 +70,8 @@ public class ventanaLogs {
                     
         });
         
-     
+        
+        screen.add(panelScroll);
         screen.add(btSalir);
         screen.add(titulo);
         
