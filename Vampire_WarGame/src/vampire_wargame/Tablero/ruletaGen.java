@@ -160,7 +160,7 @@ public class ruletaGen extends JPanel {
                   
                   
              lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
-                SwingUtilities.invokeLater(()-> graphics.girarHacia(fichaObtenida));
+              graphics.girarHacia(fichaObtenida);
                  
                  
                   Timer timer = new Timer(2000, new ActionListener(){

@@ -39,6 +39,8 @@ public class ruletaGrafica extends JPanel {
     private boolean girando = false;
     
     
+    private String fichaSeleccionada;
+    
     public ruletaGrafica(){
         ImageIcon wolf = new ImageIcon("src/resources/wolfIcon.png");
         ImageIcon vamp = new ImageIcon("src/resources/vampIcon.png");
@@ -89,9 +91,58 @@ public class ruletaGrafica extends JPanel {
     
     
     public void girarHacia(String fichaObjetivo){
+        /*
         this.fichaObjetivo= fichaObjetivo;
         calcularAnguloObjetivo();
         iniciarGiro();
+        */
+        
+        System.out.println("FICHA OBJETIVO: "+fichaObjetivo);
+        if(girando) return;
+        girando=true;
+        
+        if(timer!= null && timer.isRunning()) timer.stop();
+        
+        int index = getIndexOfFicha(fichaObjetivo);
+        if(index==-1){
+            System.out.println("Ficha no encontrada: "+fichaObjetivo);
+            girando=false;
+            return;
+        }
+        
+        double arcAngle=360.0/nombres.length;
+        double sectionAngle = index * arcAngle +arcAngle/2;
+        
+        angulo=0;
+        anguloObjetivo=1440 + (360-sectionAngle);
+        
+        
+        timer = new Timer(16, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                angulo += 15;
+                repaint();
+
+                if (angulo >= anguloObjetivo) {
+                    ((Timer) e.getSource()).stop();
+                    girando = false;
+                    fichaSeleccionada = fichaObjetivo;
+                    System.out.println("Ficha seleccionada: " + fichaSeleccionada);
+                }
+            }
+        });
+
+        timer.start();
+        
+    }
+    
+    
+    
+    private int getIndexOfFicha(String ficha){
+        for(int i=0; i< nombres.length; i++){
+            if(nombres[i].equalsIgnoreCase(ficha)) return i;
+        }
+        return -1;
     }
     
     
@@ -126,6 +177,9 @@ public class ruletaGrafica extends JPanel {
     }
     
     
+    public String getFichaSeleccionada(){
+        return fichaSeleccionada;
+    }
     
     private void calcularAnguloObjetivo(){
         double seccion =360.0/nombres.length;
@@ -183,8 +237,8 @@ public class ruletaGrafica extends JPanel {
         
         Graphics2D g2d = (Graphics2D) g.create();
         
-        int width= getWidth();
-        int height= getHeight();
+       // int width= getWidth();
+        //int height= getHeight();
         int size  = Math.min(getWidth(), getHeight())-50;
         int x = (getWidth()-size)/2;
         int y= (getHeight()-size)/2;
@@ -192,7 +246,7 @@ public class ruletaGrafica extends JPanel {
         
         g2d.translate(getWidth()/2, getHeight()/2);
         g2d.rotate(Math.toRadians(angulo));
-        g2d.translate(-width/2, -height/2);
+        //g2d.translate(-width/2, -height/2);
         
         double anguloPorSeccion = 2 * Math.PI/ iconos.length;
         
@@ -206,6 +260,8 @@ public class ruletaGrafica extends JPanel {
         }
         
         g2d.setColor(Color.BLACK);
+        
+        //dibujo de iconos
         for(int i=0; i< iconos.length; i++){
             double theta = i*anguloPorSeccion + anguloPorSeccion/2;
             double iconX = Math.cos(theta) *size/3-24;
@@ -215,10 +271,11 @@ public class ruletaGrafica extends JPanel {
             
             Image Icon = iconos[i].getImage();
             g2d.drawImage(Icon, (int) iconX, (int) iconY, 48,48, null);
+            startAngle+=arcAngle;
         }
         
-        
         g2d.dispose();
+        
         
         
         g.setColor(Color.red);
