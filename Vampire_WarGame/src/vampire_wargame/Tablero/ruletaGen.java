@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 /**
@@ -32,13 +33,14 @@ public class ruletaGen extends JPanel {
     private ImageIcon vampImag;
     private ImageIcon necroImag;
     private ImageIcon nullIcon;
-    
+    private String fichaObtenida=null;
     private int lastSelected=0;
     private JPanel panel;
     private generadorTablero tableroController;
     
     private boolean turnosControlador=true;
     private int giros=0;
+    int result=0;
     //private JPanel pTurnos;
     
     public ruletaGen(JPanel panel ){
@@ -56,6 +58,11 @@ public class ruletaGen extends JPanel {
       fContricanteActiva.put(1, 2);
       fContricanteActiva.put(2, 2);
       fContricanteActiva.put(3, 2);
+      
+      
+      
+      ruletaGrafica graphics = new ruletaGrafica();
+      graphics.setBounds(0, 0, 300, 300);
       
       
       //pTurnos =tableroController.getPTurnos();
@@ -78,23 +85,31 @@ public class ruletaGen extends JPanel {
           @Override 
           public void actionPerformed(ActionEvent e){
               ImprimirProbabilidades();
+              graphics.girar();
               
               System.out.println("");
-              int resultado = girarRuleta();
               
-              lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
-             texto.setIcon(nullIcon);
-            Timer timer = new Timer(2000, new ActionListener(){
-            @Override
-            public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
-                
-                ((Timer)e.getSource()).stop();
-                
-                switch(resultado){
+              /*
+              new Thread(()->{
+                  try{
+                      Thread.sleep(2000);
+                  }catch(InterruptedException ignored){}
+                   
+              });
+              */
+              
+            
+              
+              
+              
+              int resultado=girarRuleta();;
+              System.out.println("resultado: "+resultado);
+             switch(resultado){
                   case 1:
                       texto.setIcon(wolfImag);
                       System.out.println("RESULTADO: HOMBRE LOBO");
                       giros=0;
+                      fichaObtenida="HOMBRE LOBO";
                       break;
                       
                       
@@ -102,14 +117,14 @@ public class ruletaGen extends JPanel {
                       texto.setIcon(vampImag);
                       System.out.println("RESULTADO: VAMPIRO");
                       giros=0;
-                      
+                      fichaObtenida="VAMPIRO";
                       break;
                       
                   case 3:
                       texto.setIcon(necroImag);
                       System.out.println("RESULTADO: NECROMANCER");
                       giros=0;
-                      
+                      fichaObtenida="MUERTE";
                       break;
                       
                   case 0:
@@ -144,9 +159,39 @@ public class ruletaGen extends JPanel {
               }
                   
                   
+             lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
+                SwingUtilities.invokeLater(()-> graphics.girarHacia(fichaObtenida));
                  
-                 tableroController.setTypFicha(lastSelected);
-                 tableroController.repaint();
+                 
+                  Timer timer = new Timer(2000, new ActionListener(){
+                @Override
+                public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
+                    ((Timer)e.getSource()).stop();
+                    
+                    SwingUtilities.invokeLater(()->{
+                        tableroController.setTypFicha(lastSelected);
+                        tableroController.repaint(); 
+                    });
+                    
+                    
+                    }         
+                });
+                timer.setRepeats(false);
+                timer.start();
+             //texto.setIcon(nullIcon);
+             
+          }
+       });
+               
+             
+             /*
+            Timer timer = new Timer(2000, new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
+                
+                ((Timer)e.getSource()).stop();
+                
+                
 //              iniciarTempoCierre();
                 
                 
@@ -154,13 +199,16 @@ public class ruletaGen extends JPanel {
                 }         
             });
 
+
             timer.setRepeats(false);
             timer.start();
           }
                     
         });
+*/
        
-      panel.add(texto);
+      //panel.add(texto);
+      panel.add(graphics);
       panel.add(btGirar);
     }
     
@@ -526,3 +574,4 @@ public class ruletaGen extends JPanel {
                       
     }
 }
+               

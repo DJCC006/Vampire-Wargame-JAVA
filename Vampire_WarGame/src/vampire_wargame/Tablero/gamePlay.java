@@ -65,7 +65,7 @@ public class gamePlay {
             
             ruletaPanel.setLayout(null);
             ruletaPanel.add(generadorRuleta);
-            ruletaPanel.setBounds(60, 10, 350, 400);
+            ruletaPanel.setBounds(40, 10, 400, 700);
             
             
             panelAnuncios.setBounds(500, 650, 600, 100);
