@@ -16,11 +16,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import vampire_wargame.UsersYFichas.Ficha;
 import vampire_wargame.UsersYFichas.*;
+import vampire_wargame.menusyventanas.menuPrincipal;
 //import javax.swing.*;
 //import java.awt.*;
 /**
@@ -67,6 +69,8 @@ public class generadorTablero extends JPanel implements MouseListener {
     private JPanel cJugador;
     private JPanel cContricante;
     private JPanel pTurnos;
+    private JFrame gameScreen;
+    
     
     private int typNecromancer=3;
     private int typZombie=4;
@@ -78,7 +82,7 @@ public class generadorTablero extends JPanel implements MouseListener {
     Usuario CONTRICANTE;
     
     
-    public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos, Usuario PLAYER, Usuario CONTRICANTE){
+    public generadorTablero(int tamanioCeldas, ruletaGen ruleta, JPanel pAnuncios, JPanel cJugador, JPanel cContricantes, JPanel pTurnos, Usuario PLAYER, Usuario CONTRICANTE, JFrame gameScreen){
         this.PLAYER=PLAYER;
         this.CONTRICANTE=CONTRICANTE;
         ruletaGeneral= ruleta;
@@ -87,6 +91,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         this.cJugador=cJugador;
         this.cContricante=cContricantes;
         this.pTurnos=pTurnos;
+        this.gameScreen=gameScreen;
         setPreferredSize(new Dimension(columnas * tamanioCeldas, filas*tamanioCeldas));
         addMouseListener(this);//agregar el listener de los clicks
         
@@ -264,6 +269,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         
         
         //Obtencion de info de tipo de ficha seleccionada
+        CantidadesShow();
         
         if(turnos){
             typFichaActual=ruletaGeneral.getLastSelected();
@@ -327,19 +333,32 @@ public class generadorTablero extends JPanel implements MouseListener {
                             //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             
                              if(revYAtaque()){
-                                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
-                                    msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                }
-                                turnos=false;
-                                ruletaGeneral.setTurnos(turnos);
-                                msgCambioTurnos(turnos, pTurnos);    
-                                fichaOnHold=null;
-                                seleccion=false;
-                                ruletaGeneral.cleanLastSelected();
-                                casillasDisponibles.clear();
-                                repaint();
                                  
+                                 //eliminateZombies(turnos);//para que los zombies desaparezcan primero y luego el check de win si sea coeherente
                                  
+                                 //Revisar si ya no hay fichas para indicar wins
+                                 if(checkWins(turnos)){
+                                     JOptionPane.showMessageDialog(this, CONTRICANTE.getUsername()+" SE HA QUEDADO SIN FICHAS | "+PLAYER.getUsername()+" HA GANADO LA PARTIDA");
+                                     PLAYER.addPoints(3);
+                                     gameScreen.dispose();
+                                     menuPrincipal ventana = new menuPrincipal();
+                                     
+                                     
+                                 }else{
+                                     
+                                    if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                                        msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        
+                                    }
+                                    turnos=false;
+                                    ruletaGeneral.setTurnos(turnos);
+                                    msgCambioTurnos(turnos, pTurnos);    
+                                    fichaOnHold=null;
+                                    seleccion=false;
+                                    ruletaGeneral.cleanLastSelected();
+                                    casillasDisponibles.clear();
+                                    repaint();
+                                 }
                                  
                              }else{
                                 filaSeleccionada=-1;
@@ -381,21 +400,29 @@ public class generadorTablero extends JPanel implements MouseListener {
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             if(revYAtaque()){
-                                if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
-                                    msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                }
                                 
-                                turnos=true;
-                                ruletaGeneral.setTurnos(turnos);
-                                msgCambioTurnos(turnos, pTurnos);    
-                                fichaOnHold=null;
-                                seleccion=false;
-                                ruletaGeneral.cleanLastSelected();
-                                casillasDisponibles.clear();
-                                repaint();
-                                 
-                                 
-                                 
+                                //eliminateZombies(turnos);
+                                
+                                
+                                if(checkWins(turnos)){
+                                    JOptionPane.showMessageDialog(this, PLAYER.getUsername()+" SE HA QUEDADO SIN FICHAS | "+CONTRICANTE.getUsername()+" HA GANADO LA PARTIDA");
+                                    CONTRICANTE.addPoints(3);
+                                    gameScreen.dispose();
+                                    menuPrincipal ventana = new menuPrincipal();
+                                }else{
+                                   if(tableroLogico[filaSeleccionada][columnaSeleccionada]!=null){
+                                    msgAtaqueBasic(pAnuncios,fichaOnHold, tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                    }
+
+                                    turnos=true;
+                                    ruletaGeneral.setTurnos(turnos);
+                                    msgCambioTurnos(turnos, pTurnos);    
+                                    fichaOnHold=null;
+                                    seleccion=false;
+                                    ruletaGeneral.cleanLastSelected();
+                                    casillasDisponibles.clear();
+                                    repaint(); 
+                                }
                              }else{
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
@@ -830,6 +857,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
                                     }
                                     tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                    eliminateZombies(turnos);
                                     return true;
                                 }else{
                                     System.out.println("STATS DE CONTRICANTE:"
@@ -884,6 +912,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
                                     }
                                     tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                    eliminateZombies(turnos);
                                     return true;
                                 }else{
                                     
@@ -914,5 +943,117 @@ public class generadorTablero extends JPanel implements MouseListener {
         msgCambioTurnos(turnos, pTurnos);
         repaint();
     }
+    
+    
+    
+    
+    private boolean checkWins(boolean turnos){
+        int contador=0;
+        if(turnos){
+            for(int i=0; i< 6; i++){
+                for(int j=0; j<6; j++){
+                    if(tableroLogico[i][j]!=null){
+                        Ficha ficha = tableroLogico[i][j];
+                        if(ficha.getTypeFicha()!=4 && ficha.getBando().equals("CONTRARIO")){
+                            contador++;
+                        }
+                    }
+                }
+            }
+        }else{
+            for(int i=0; i< 6; i++){
+                for(int j=0; j<6; j++){
+                    if(tableroLogico[i][j]!=null){
+                        Ficha ficha = tableroLogico[i][j];
+                        if(ficha.getTypeFicha()!=4 && ficha.getBando().equals("JUGADOR")){
+                            contador++;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if(contador==0){
+            return true;
+        }
+        
+        
+        return false;
+    }
+    
+    private void CantidadesShow(){
+        int cantPLAYER=0;
+        int cantCONT=0;
+        for(int i=0; i< 6; i++){
+                for(int j=0; j<6; j++){
+                    if(tableroLogico[i][j]!=null){
+                        Ficha ficha = tableroLogico[i][j];
+                        if(ficha.getTypeFicha()!=4 && ficha.getBando().equals("JUGADOR")){
+                            cantPLAYER++;
+                        }else if(ficha.getTypeFicha()!=4 && ficha.getBando().equals("CONTRARIO")){
+                            cantCONT++;
+                        }
+                    }
+                }
+            }
+        
+        System.out.println("CANTIDAD DE FICHAS PLAYER: "+cantPLAYER);
+        System.out.println("CANTIDAD DE FICHAS CONTRICANTE: "+cantCONT);
+    }
+    
+    
+    
+    private void eliminateZombies(boolean turnos){
+        int numMuertes=0;
+        
+        //REVISAR CANTIDAD DE MUERTES
+        if(turnos){
+            for(int i=0; i<6; i++){
+                for(int j=0; j<6; j++){
+                    Ficha ficha=tableroLogico[i][j];
+                    if(ficha!=null && ficha.getBando().equals("CONTRARIO")&& ficha.getTypeFicha()==3){
+                        numMuertes++;
+                    }
+                }
+            }
+        }else{
+            for(int i=0; i<6; i++){
+                for(int j=0; j<6; j++){
+                    Ficha ficha=tableroLogico[i][j];
+                    if(ficha!= null && ficha.getBando().equals("JUGADOR")&& ficha.getTypeFicha()==3){
+                        numMuertes++;
+                    }
+                }
+            }
+        }
+        
+        if(numMuertes==0){//procede a eliminar todos los zombies
+            if(turnos){
+               for(int i=0; i<6; i++){
+                   for(int j=0; j<6; j++){
+                       Ficha ficha=tableroLogico[i][j];
+                       if(ficha!= null && ficha.getBando().equals("CONTRARIO")&& ficha.getTypeFicha()==4){
+                           tableroLogico[i][j]=null;
+                       }
+                   }
+               }
+           }else{
+               for(int i=0; i<6; i++){
+                   for(int j=0; j<6; j++){
+                       Ficha ficha=tableroLogico[i][j];
+                       if(ficha!= null && ficha.getBando().equals("JUGADOR")&& ficha.getTypeFicha()==4){
+                           tableroLogico[i][j]=null;
+                       }
+                   }
+               }
+           }
+        }
+        
+       System.out.println("NUM MUERTES: "+numMuertes);
+       revalidate();
+       repaint();
+    }
+    
+    
     
 }

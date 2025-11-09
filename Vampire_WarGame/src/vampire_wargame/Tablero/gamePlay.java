@@ -52,7 +52,7 @@ public class gamePlay {
             
             JPanel panelTurnos = new JPanel();
             
-            generadorTablero tablero = new generadorTablero(100, generadorRuleta, panelAnuncios, cementerioPlayer, cementerioContricante, panelTurnos, PLAYER, CONTRICANTE);
+            generadorTablero tablero = new generadorTablero(100, generadorRuleta, panelAnuncios, cementerioPlayer, cementerioContricante, panelTurnos, PLAYER, CONTRICANTE, screen);
             generadorRuleta.setTablero(tablero);
             JPanel panelTablero = new JPanel();
             panelTablero.setBounds(400, 10, 800, 600);

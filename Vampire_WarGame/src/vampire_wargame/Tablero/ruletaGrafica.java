@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Polygon;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
@@ -24,7 +26,7 @@ import javax.swing.Timer;
 public class ruletaGrafica extends JPanel {
     private final ImageIcon[] iconos = new ImageIcon[6];
    private final String[] nombres = {"HOMBRE LOBO", "VAMPRIO", "MUERTE", "HOMBRE LOBO", "VAMPIRO", "MUERTE"};
-    private double angulo = 0;
+    
     
     private double velocidad=0;
     
@@ -33,13 +35,21 @@ public class ruletaGrafica extends JPanel {
     private String fichaObjetivo=null;
     
     
+    double  targetAbsolute=0;
+    
     private double currentAngle=0;
    private double anguloObjetivo=0;
-   private Timer timer;
-    private boolean girando = false;
+   
+    
     
     
     private String fichaSeleccionada;
+    
+    
+    
+    private double angulo = 0;
+    private Timer timer;
+    private boolean girando = false;
     
     public ruletaGrafica(){
         ImageIcon wolf = new ImageIcon("src/resources/wolfIcon.png");
@@ -61,6 +71,45 @@ public class ruletaGrafica extends JPanel {
         this.resultadoLabel=label;
     }
     
+    
+    //METODOS PARA IMPLEMENTACION 2
+    public void startGiro(){
+        if(girando) return;
+        
+        girando=true;
+        
+        timer= new Timer(16,e ->{
+            angulo+=10;
+            if(angulo>=360) angulo -= 360;
+            repaint();
+        });
+        timer.start();
+    }
+    
+    
+    
+    public void detenerGiro(){
+        if(timer!= null && timer.isRunning()){
+            timer.stop();
+        }
+        girando=false;
+    }
+    
+    
+    public void posicionarFicha(String fichaObjetivo){
+        int index =getIndexOfFicha(fichaObjetivo);
+        if(index ==-1)return;
+        
+        double seccion =360.0/iconos.length;
+        
+        angulo= 360-(index*seccion+seccion/2);
+        //angulo= index*seccion+seccion/2;
+        //if(angulo>=360) angulo-=360;
+        angulo =angulo%360;
+        repaint();
+    }
+    
+            
     
     public void girar(){
         repaint();
@@ -99,33 +148,74 @@ public class ruletaGrafica extends JPanel {
         
         System.out.println("FICHA OBJETIVO: "+fichaObjetivo);
         if(girando) return;
-        girando=true;
-        
-        if(timer!= null && timer.isRunning()) timer.stop();
-        
-        int index = getIndexOfFicha(fichaObjetivo);
-        if(index==-1){
+        int index= getIndexOfFicha(fichaObjetivo);
+         if(index==-1){
             System.out.println("Ficha no encontrada: "+fichaObjetivo);
             girando=false;
             return;
         }
+         
         
-        double arcAngle=360.0/nombres.length;
-        double sectionAngle = index * arcAngle +arcAngle/2;
         
-        angulo=0;
-        anguloObjetivo=1440 + (360-sectionAngle);
+        double currentNorm = ((currentAngle%360)+360)%360;
+        
+        double arcAngle =360/ nombres.length;
+        double sectionCenter = index*arcAngle+arcAngle/2.0; 
+        
+        
+        double needed = ((90.0-sectionCenter)%360.0+360.0)%360.0;
+        
+        int extraVueltas=3;
+        targetAbsolute = extraVueltas * 360.0+needed;
+        
+        double startAbs= currentAngle;
+        while(targetAbsolute <= startAbs+0.1){
+            targetAbsolute +=360.0;
+        }
+        
+        
+        
+        
+        
+        
+        
+        if(timer!= null && timer.isRunning()) timer.stop();
+        girando=true;
+        //int index = getIndexOfFicha(fichaObjetivo);
+       fichaSeleccionada=null;
+       
+       final double[] velocidad = {25.0};
+        
+        //double arcAngle=360.0/nombres.length;
+        //double sectionAngle = index * arcAngle +arcAngle/2;
+        
+        //angulo=0;
+        //anguloObjetivo=1440 + (360-sectionAngle);
         
         
         timer = new Timer(16, new ActionListener() {
+             
             @Override
             public void actionPerformed(ActionEvent e) {
-                angulo += 15;
+                //angulo += 15;
+                angulo += velocidad[0];
+                double restante = targetAbsolute -angulo;
+                if(restante<0) restante =0;
+                
+                if(restante<360){
+                    velocidad[0]*=0.92;
+                    if(velocidad[0]<1.2)velocidad[0]=1.2;
+                }else{
+                    velocidad[0]*=0.995;
+                    if(velocidad[0]<6)velocidad[0]=6;
+                }
+                
                 repaint();
 
-                if (angulo >= anguloObjetivo) {
+                if (angulo >= anguloObjetivo-0.5) {
                     ((Timer) e.getSource()).stop();
                     girando = false;
+                    angulo = ((angulo%360)+360)%360;
                     fichaSeleccionada = fichaObjetivo;
                     System.out.println("Ficha seleccionada: " + fichaSeleccionada);
                 }
@@ -235,6 +325,7 @@ public class ruletaGrafica extends JPanel {
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         
+        /*
         Graphics2D g2d = (Graphics2D) g.create();
         
        // int width= getWidth();
@@ -282,6 +373,53 @@ public class ruletaGrafica extends JPanel {
         int[] px= {getWidth()/2, getWidth()/2-10, getWidth()/2+10};
         int[] py = {y-5,y+20,y+20};
         g.fillPolygon(px,py,3);
+        */
+        
+        
+        Graphics2D g2d = (Graphics2D) g.create();
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        int w= getWidth();
+        int h= getHeight();
+        int size = Math.min(w,h)-40;
+        int x= (w-size)/2;
+        int y=(h-size)/2;
+        
+        int centerX= w/2;
+        int centerY=h/2;
+        
+        double seccion =360.0/nombres.length;
+        
+        g2d.rotate(Math.toRadians(angulo), centerX, centerY);
+        
+        for(int i=0; i< nombres.length; i++){
+            if(i%2==0) g2d.setColor(new Color(230,230,230));
+            else g2d.setColor( new Color(200,200,200));
+            
+            g2d.fillArc(x, y, size, size,(int) (i*seccion), (int)seccion);
+        }
+        
+        for(int i=0; i< nombres.length; i++){
+            double angle = Math.toRadians(i* seccion + seccion/2);
+            int iconX = (int) (centerX+(size/2.5)*Math.cos(angle));
+            int iconY= (int) (centerY+(size/2.5)*Math.sin(angle));
+            
+            Image icono = iconos[i].getImage();
+            int iconSize=40;
+            g2d.drawImage(icono, iconX-iconSize/2, iconY-iconSize/2, iconSize, iconSize, this);
+        }
+        
+        g2d.rotate(-Math.toRadians(angulo), centerX, centerY);
+        
+        
+        Polygon puntero = new Polygon();
+        puntero.addPoint(centerX, y-10);
+        puntero.addPoint(centerX-10, y+10);
+        puntero.addPoint(centerX+10, y+10);
+        g2d.setColor(Color.red);
+        g2d.fillPolygon(puntero);
+        
+        g2d.dispose();
         
         
     }

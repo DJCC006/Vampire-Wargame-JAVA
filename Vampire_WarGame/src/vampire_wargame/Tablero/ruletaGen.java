@@ -43,6 +43,8 @@ public class ruletaGen extends JPanel {
     int result=0;
     //private JPanel pTurnos;
     
+    
+    
     public ruletaGen(JPanel panel ){
         this.panel=panel;
       //this.panel=panel;
@@ -85,24 +87,29 @@ public class ruletaGen extends JPanel {
           @Override 
           public void actionPerformed(ActionEvent e){
               ImprimirProbabilidades();
-              graphics.girar();
+              graphics.startGiro();
               
               System.out.println("");
               
               /*
+              
               new Thread(()->{
                   try{
                       Thread.sleep(2000);
                   }catch(InterruptedException ignored){}
+                    
+                   graphics.girarHacia(fichaObtenida);
                    
-              });
+              }).start();
               */
               
-            
               
               
               
-              int resultado=girarRuleta();;
+              int  resultado=girarRuleta();
+              
+              
+              
               System.out.println("resultado: "+resultado);
              switch(resultado){
                   case 1:
@@ -130,11 +137,6 @@ public class ruletaGen extends JPanel {
                   case 0:
                       texto.setIcon(nullIcon);
                       System.out.println("RESULTADO: ESPACIO VACIO");
-                      
-                      
-                      
-                      
-           
                       int extra= manejarResultadoNulo(); 
                       switch(extra){
                           case 1:
@@ -160,8 +162,9 @@ public class ruletaGen extends JPanel {
                   
                   
              lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
-              graphics.girarHacia(fichaObtenida);
+//              graphics.girarHacia(fichaObtenida);
                  
+             
                  
                   Timer timer = new Timer(2000, new ActionListener(){
                 @Override
@@ -169,6 +172,8 @@ public class ruletaGen extends JPanel {
                     ((Timer)e.getSource()).stop();
                     
                     SwingUtilities.invokeLater(()->{
+                        graphics.detenerGiro();
+                        graphics.posicionarFicha(fichaObtenida);
                         tableroController.setTypFicha(lastSelected);
                         tableroController.repaint(); 
                     });
@@ -178,6 +183,9 @@ public class ruletaGen extends JPanel {
                 });
                 timer.setRepeats(false);
                 timer.start();
+         
+                
+                
              //texto.setIcon(nullIcon);
              
           }
@@ -292,14 +300,14 @@ public class ruletaGen extends JPanel {
         if(turnosControlador){
             //Proceso para buscar el peso / cantidad minima de fichas que hay
             for(int peso: favorabilidadActiva.keySet()){
-                if(peso>0 && peso< pesoMinimo){
+                if(peso>=0 && peso< pesoMinimo){
                     pesoMinimo=peso;
                 }
             }
             //Encontrar los tipo de ficha dentro de tal rango
         }else{
             for(int peso: fContricanteActiva.keySet()){
-                if(peso>0 && peso< pesoMinimo){
+                if(peso>=0 && peso< pesoMinimo){
                     pesoMinimo=peso;
                 }
             }
@@ -521,7 +529,7 @@ public class ruletaGen extends JPanel {
                       //tableroController.cTurnosAccess(turnosControlador);
                       //tableroController.repaint();
                   }
-              }else if(pesos==3){
+              }else if(pesos<=3){
                   if(giros!=3){
                       System.out.println("TIENE OTRO CHANCE PAPI");
                   }else{
