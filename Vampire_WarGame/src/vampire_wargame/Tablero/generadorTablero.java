@@ -138,7 +138,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         int anchoCelda =getWidth()/columnas;
         int alturaCelda= getHeight()/filas;
         
-        
+        System.out.println("TURNO: "+turnos);
          if(turnos){
             typFichaActual=ruletaGeneral.getLastSelected();
         }else{
@@ -696,7 +696,9 @@ public class generadorTablero extends JPanel implements MouseListener {
     }
     
     
-    
+    public JPanel getPTurnos(){
+        return pTurnos;
+    }
     private void msgCambioTurnos(boolean turnos, JPanel panel){//USAR UN JPANEL APARTE PARA TURNOS
         JLabel texto= new JLabel();
         if(turnos){
@@ -713,6 +715,10 @@ public class generadorTablero extends JPanel implements MouseListener {
             texto.setFont(new Font("Serif", Font.BOLD, 18));
         }
         
+    }
+    
+    public void cTurnosAccess(boolean turnos){
+        msgCambioTurnos(turnos, pTurnos);
     }
     
     
@@ -810,14 +816,15 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 
                                 //REVISION DE ELIMINACION 
                                 if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
-                                    System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                    Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    System.out.println(fichaEliminated.getName()+" ha sido eliminada");
                                     ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
                                     JLabel fichaEliminada = new JLabel(imagenEliminada);
                                     cJugador.add(fichaEliminada);
                                     cJugador.revalidate();
                                     cJugador.repaint();
                                     
-                                    if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
+                                    if(ruletaGeneral.reducirPesoFicha(fichaEliminated.getTypeFicha())){
                                         System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
                                     }else{
                                         System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
@@ -898,6 +905,14 @@ public class generadorTablero extends JPanel implements MouseListener {
     
     public boolean getTurno(){
         return turnos;
+    }
+    
+    
+    public void modifyTurnos(boolean turnos){
+        this.turnos=turnos;
+        ruletaGeneral.setTurnos(turnos);
+        msgCambioTurnos(turnos, pTurnos);
+        repaint();
     }
     
 }

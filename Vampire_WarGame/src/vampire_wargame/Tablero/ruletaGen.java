@@ -38,6 +38,8 @@ public class ruletaGen extends JPanel {
     private generadorTablero tableroController;
     
     private boolean turnosControlador=true;
+    private int giros=0;
+    //private JPanel pTurnos;
     
     public ruletaGen(JPanel panel ){
         this.panel=panel;
@@ -56,7 +58,7 @@ public class ruletaGen extends JPanel {
       fContricanteActiva.put(3, 2);
       
       
-      
+      //pTurnos =tableroController.getPTurnos();
       ruletaImag= new ImageIcon("src\\resources\\ruletaGIF.gif");
       wolfImag = new ImageIcon("src\\resources\\wolfIcon.png");
       vampImag = new ImageIcon("src\\resources\\vampIcon.png");
@@ -92,40 +94,52 @@ public class ruletaGen extends JPanel {
                   case 1:
                       texto.setIcon(wolfImag);
                       System.out.println("RESULTADO: HOMBRE LOBO");
+                      giros=0;
                       break;
                       
                       
                   case 2:
                       texto.setIcon(vampImag);
                       System.out.println("RESULTADO: VAMPIRO");
+                      giros=0;
                       
                       break;
                       
                   case 3:
                       texto.setIcon(necroImag);
                       System.out.println("RESULTADO: NECROMANCER");
+                      giros=0;
                       
                       break;
                       
                   case 0:
                       texto.setIcon(nullIcon);
                       System.out.println("RESULTADO: ESPACIO VACIO");
-                      int extra= manejarResultadoNulo();
+                      
+                      
+                      
+                      
+           
+                      int extra= manejarResultadoNulo(); 
                       switch(extra){
                           case 1:
                               texto.setIcon(wolfImag);
                               System.out.println("RESULTADO EXTRA: HOMBRE LOBO");
+                              evaluacionNulos();
                               break;
                               
                           case 2:
                               texto.setIcon(vampImag);
                               System.out.println("RESULTADO EXTRA: VAMPIRO");
+                              evaluacionNulos();
                               break;
                           case 3:
                               texto.setIcon(necroImag);
                               System.out.println("RESULTADO EXTRA: NECROMANCER");
+                              evaluacionNulos();
                               break;
                       }
+
                       break;
               }
                   
@@ -153,7 +167,7 @@ public class ruletaGen extends JPanel {
     
     
     public int girarRuleta() {
-        
+        giros++;
         int resultado = rand.nextInt(espacioMuestralFijo)+1;
         
         int favAcumulada=0;
@@ -196,23 +210,23 @@ public class ruletaGen extends JPanel {
     public boolean reducirPesoFicha(int tipoFicha){//probablemente modificar para cambiar al del tipo del enemigo
         
         //Condicionado a turnos
-        if(turnosControlador){
+        System.out.println("TURNO SEGUN REDUCTOR: "+turnosControlador);
+        if(turnosControlador==true){
             if(tipoFicha!=4){
-               int favActual = favorabilidadActiva.get(tipoFicha);
+               int favActual = fContricanteActiva.get(tipoFicha);
 
                 if(favActual >0 && favActual<4){//menor a 4 para evitar la reduccion de zombie
-                    favorabilidadActiva.put(tipoFicha, favActual-1);
+                    fContricanteActiva.put(tipoFicha, favActual-1);
                     return true;
                 }   
             }
                
-        }else{
-            
+        }else if(turnosControlador==false){
             if(tipoFicha!=4){
-                int favActual = fContricanteActiva.get(tipoFicha);
+                int favActual = favorabilidadActiva.get(tipoFicha);
 
                 if(favActual >0 && favActual<4){
-                    fContricanteActiva.put(tipoFicha, favActual-1);
+                    favorabilidadActiva.put(tipoFicha, favActual-1);
                     return true;
                 } 
             }
@@ -223,6 +237,7 @@ public class ruletaGen extends JPanel {
     
     
     public int manejarResultadoNulo(){
+        System.out.println("Haciendo el manejo inicial de nulo");
         int pesoMinimo=6;
         
         //Condicionada a turnos
@@ -278,11 +293,12 @@ public class ruletaGen extends JPanel {
     
     
     public void ImprimirProbabilidades(){//testing only
-        System.out.println("----PROBABLIDADES ACTUALES-----");
+       
         int pesoTotalActivo =0;
         
         //condicionado a turnos
         if(turnosControlador){
+             System.out.println("----PROBABLIDADES ACTUALES JUGADOR-----");
              for(int peso: favorabilidadActiva.values()){
                 pesoTotalActivo+=peso;//cuantas fichas hay en total
             }
@@ -295,6 +311,7 @@ public class ruletaGen extends JPanel {
                 System.out.printf("Tipo %d: %d/%d (%.2f%%)\n", tipo, peso, espacioMuestralFijo, probabilidad*100);
             }
         }else{
+             System.out.println("----PROBABLIDADES ACTUALES CONTRICANTE-----");
              for(int peso: fContricanteActiva.values()){
                 pesoTotalActivo+=peso;//cuantas fichas hay en total
             }
@@ -426,4 +443,86 @@ public class ruletaGen extends JPanel {
         turnosControlador=cambio;
     }
     
+    private int evaluacionPesos(boolean turnos){
+        int pesoTotalActivo=0;
+        if(turnos){
+            for(int peso: favorabilidadActiva.values()){
+                pesoTotalActivo+=peso;
+            }
+            
+        }else{
+             for(int peso: fContricanteActiva.values()){
+                pesoTotalActivo+=peso;
+            }
+        }
+        return pesoTotalActivo;
+    }
+    
+    
+    private void evaluacionNulos(){
+        //Evaluacion de pesos 
+          if(turnosControlador){
+              int pesos = evaluacionPesos(turnosControlador);
+              if(pesos==4){
+                  if(giros!=2){
+                      System.out.println("TIENE OTRO CHANCE MIJO");
+                  }else{
+                      System.out.println("YA SE LE ACABARON LOS CAHANCES PAPI");
+                      tableroController.modifyTurnos(false);
+                      giros=0;
+                      //tableroController.cTurnosAccess(turnosControlador);
+                      //tableroController.repaint();
+                  }
+              }else if(pesos==3){
+                  if(giros!=3){
+                      System.out.println("TIENE OTRO CHANCE PAPI");
+                  }else{
+                      System.out.println("YA SE LE ACABARON LOS CHANCES PAPI");
+                      tableroController.modifyTurnos(false);
+                      giros=0;
+                      //tableroController.cTurnosAccess(turnosControlador);
+                      //tableroController.repaint();
+                  }
+
+              }else{
+                  System.out.println("NO CUMPLISTE NADA, NI MODO SALTO DE TURNO");
+                  tableroController.modifyTurnos(false);
+                  giros=0;
+                  //tableroController.cTurnosAccess(turnosControlador);
+                  //tableroController.repaint();
+              }
+          }else{
+               int pesos = evaluacionPesos(turnosControlador);
+              if(pesos==4){
+                  if(giros!=2){
+                      System.out.println("TIENE OTRO CHANCE MIJO");
+                      
+                  }else{
+                      System.out.println("YA SE LE ACABARON LOS CAHANCES PAPI");
+                      tableroController.modifyTurnos(true);
+                      giros=0;
+                     // tableroController.cTurnosAccess(turnosControlador);
+                      //tableroController.repaint();
+                  }
+              }else if(pesos==3){
+                  if(giros!=3){
+                      System.out.println("TIENE OTRO CHANCE PAPI");
+                  }else{
+                      System.out.println("YA SE LE ACABARON LOS CHANCES PAPI");
+                      tableroController.modifyTurnos(true);
+                      giros=0;
+                      //tableroController.cTurnosAccess(turnosControlador);
+                      //tableroController.repaint();
+                  }
+
+              }else{
+                  System.out.println("NO CUMPLISTE NADA, NI MODO SALTO DE TURNO");
+                  tableroController.modifyTurnos(true);
+                  giros=0;
+                 // tableroController.cTurnosAccess(turnosControlador);
+                  //tableroController.repaint();
+              }
+          }
+                      
+    }
 }
