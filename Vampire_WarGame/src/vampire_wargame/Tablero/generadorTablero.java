@@ -811,6 +811,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 //REVISION DE ELIMINACION 
                                 if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
                                     System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                    ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                    JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                    cJugador.add(fichaEliminada);
+                                    cJugador.revalidate();
+                                    cJugador.repaint();
+                                    
                                     if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
                                         System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
                                     }else{
@@ -859,6 +865,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 //REVISION DE ELIMINACION 
                                 if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
                                     System.out.println(tableroLogico[filaSeleccionada][columnaSeleccionada].getName()+" ha sido eliminada");
+                                    ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                    JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                    cContricante.add(fichaEliminada);
+                                    cContricante.revalidate();
+                                    cContricante.repaint();
+                                    
                                     if(ruletaGeneral.reducirPesoFicha(tableroLogico[filaSeleccionada][columnaSeleccionada].getTypeFicha())){
                                         System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
                                     }else{

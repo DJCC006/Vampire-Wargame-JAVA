@@ -6,6 +6,7 @@ package vampire_wargame.Tablero;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -74,6 +75,7 @@ public class gamePlay {
             
             cementerioPlayer.setBounds(1140, 100, 350, 300);
             cementerioPlayer.setBackground(Color.GRAY);
+            cementerioPlayer.setLayout(new GridLayout(0,3));
             
             panelTurnos.setBackground(Color.GRAY);
             panelTurnos.setBounds(60, 400, 350, 80);
@@ -87,7 +89,7 @@ public class gamePlay {
             
             cementerioContricante.setBounds(1140, 500, 350, 300);
             cementerioContricante.setBackground(Color.GRAY);
-            
+            cementerioContricante.setLayout(new GridLayout(0,3));
             
             
             
