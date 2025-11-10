@@ -5,16 +5,24 @@
 package vampire_wargame.Tablero;
 
 import java.awt.Color;
+import static java.awt.Color.GRAY;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import vampire_wargame.UsersYFichas.Usuario;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
 import vampire_wargame.menusyventanas.menuPrincipal;
@@ -27,18 +35,26 @@ public class gamePlay {
     
     private static Usuario PLAYER;
     private static Usuario CONTRICANTE;
-    
-    public gamePlay(Usuario PLAYER, Usuario CONTRICANTE){
+    private Calendar hoy;
+    public gamePlay(Usuario PLAYER, Usuario CONTRICANTE){ 
         this.PLAYER=PLAYER;
         this.CONTRICANTE=CONTRICANTE;
         
+        hoy = Calendar.getInstance();
+        
+         int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+        
+        
         SwingUtilities.invokeLater(()-> {
-            String rutaFondo = "src/resources/backgroundWood.jpg";
+            //String rutaFondo = "src/resources/backgroundWood.jpg";
             
-            panelFondo panelP= new panelFondo(rutaFondo);
+            //panelFondo panelP= new panelFondo(rutaFondo);
             JFrame screen = new JFrame();
-            screen.setContentPane(panelP);
-            
+            //screen.setContentPane(panelP);
+            Container contentPane = screen.getContentPane();
+            contentPane.setBackground(Color.DARK_GRAY);
             
             screen.setSize(3000, 900);  //Tamaño standard para menus
             screen.setResizable(false);
@@ -48,9 +64,12 @@ public class gamePlay {
 
             
             
+            
+            
             //CONFIG DE RULETA
             JPanel ruletaPanel = new JPanel();
             ruletaGen generadorRuleta= new ruletaGen(ruletaPanel);
+            ruletaPanel.setBackground(Color.DARK_GRAY);
             
             //Creadores de otras cosas que requiere el tablero
             JPanel panelAnuncios = new JPanel();
@@ -64,7 +83,7 @@ public class gamePlay {
             generadorRuleta.setTablero(tablero);
             JPanel panelTablero = new JPanel();
             panelTablero.setBounds(400, 10, 800, 600);
-            //panelTablero.setBackground(Color.red);
+            panelTablero.setBackground(Color.DARK_GRAY);
             panelTablero.add(tablero);
             
             
@@ -107,30 +126,46 @@ public class gamePlay {
             graveContriLB.setFont(new Font("Serif", Font.BOLD, 25));
             graveContriLB.setForeground(new Color(255,215,0));
             
+            JLabel indicadores1= new JLabel();
+            indicadores1.setText("FICHAS NEGRAS: "+CONTRICANTE.getUsername().toUpperCase());
+            indicadores1.setBounds(60, 600, 200, 25);
+            indicadores1.setForeground(new Color(255,215,0));
+            
+            JLabel indicadores2= new JLabel();
+            indicadores2.setText("FICHAS BLANCAS: "+PLAYER.getUsername().toUpperCase());
+            indicadores2.setBounds(60, 620, 200, 25);
+            indicadores2.setForeground(new Color(255,215,0));
+            
             
             
             JButton rendirseBT= new JButton("RENDIRSE");
             rendirseBT.setBounds(60, 500, 300, 80);
+            rendirseBT.setBackground(GRAY);
+            rendirseBT.setBorder(bordeBoton);
             
             
            rendirseBT.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
               Object[] opciones = {"Si", "No"};
+              String patron = "dd/MM/yyyy";
+              SimpleDateFormat format = new SimpleDateFormat(patron);
+              Date jugada = hoy.getTime();
+              String fecha= format.format(jugada);
               int choice = JOptionPane.showOptionDialog(screen, "¿Esta seguro de Rendirse?", "Confirmacion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
               
 
             if(choice==JOptionPane.YES_OPTION){
                 if(tablero.getTurno()){
-                    String mensaje= "JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
-                            +" | PERDEDOR: "+PLAYER.getUsername().toLowerCase()+" | GANADOR:" +CONTRICANTE.getUsername().toUpperCase();
+                    String mensaje= "FECHA: "+fecha+" | JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
+                            +" | PERDEDOR: "+PLAYER.getUsername().toLowerCase()+" (SE RINDIO) | GANADOR:" +CONTRICANTE.getUsername().toUpperCase();
                     JOptionPane.showMessageDialog(screen, PLAYER.getUsername().toUpperCase()+"se ha RENDIDO. GANA "+CONTRICANTE.getUsername().toUpperCase() );
                     PLAYER.registrarPartida(mensaje);
                     CONTRICANTE.registrarPartida(mensaje);
                     CONTRICANTE.addPoints(3);
                 }else{
-                    String mensaje= "JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
-                            +" | PERDEDOR: "+CONTRICANTE.getUsername().toLowerCase()+" | GANADOR:" +PLAYER.getUsername().toUpperCase();
+                    String mensaje= "FECHA: "+fecha+" | JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
+                            +" | PERDEDOR: "+CONTRICANTE.getUsername().toLowerCase()+" (SE RINDIO) | GANADOR:" +PLAYER.getUsername().toUpperCase();
                     JOptionPane.showMessageDialog(screen, CONTRICANTE.getUsername().toUpperCase()+"se ha RENDIDO. GANA "+PLAYER.getUsername().toUpperCase() );
                     PLAYER.registrarPartida(mensaje);
                     CONTRICANTE.registrarPartida(mensaje);
@@ -146,7 +181,8 @@ public class gamePlay {
                     
         });
             
-            
+            screen.add(indicadores1);
+            screen.add(indicadores2);
             screen.add(panelTurnos);
             screen.add(rendirseBT);
             screen.add(cementerioPlayer);

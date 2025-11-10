@@ -34,7 +34,7 @@ public class Vampire extends Ficha{
             if(super.ptVida>=4){
                 super.ptVida=4;//reset a stats
                 JOptionPane.showMessageDialog(null, "HP LLENA");
-                System.out.println("YA SE PUSEE HP A FULL");
+                //System.out.println("YA SE PUSEE HP A FULL");
             }else if(super.ptVida<4){
                 ficha.ptVida-=1;
                 super.ptVida+=1;
@@ -42,7 +42,18 @@ public class Vampire extends Ficha{
         }
     }
     
-    
+    public void chuparSangre(Ficha ficha){
+         if(ficha.ptVida>=0){
+            if(super.ptVida>=4){
+                super.ptVida=4;//reset a stats
+                JOptionPane.showMessageDialog(null, "HP LLENA");
+                //System.out.println("YA SE PUSEE HP A FULL");
+            }else if(super.ptVida<4){
+                ficha.ptVida-=1;
+                super.ptVida+=1;
+            }
+        }
+    }
     public void bajarseVida(){
         super.ptVida--;
     }

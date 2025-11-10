@@ -15,7 +15,10 @@ import java.awt.Point;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -32,7 +35,7 @@ import vampire_wargame.menusyventanas.menuPrincipal;
  *
  * @author David
  */
-public class generadorTablero extends JPanel implements MouseListener {
+public final class generadorTablero extends JPanel implements MouseListener {
     private int tamanioCeldas;
     private int filas =6;
     private int columnas=6;
@@ -83,6 +86,13 @@ public class generadorTablero extends JPanel implements MouseListener {
     //CONTROLADORES DE JUGADORES
     Usuario PLAYER;
     Usuario CONTRICANTE;
+    
+    private Calendar hoy = Calendar.getInstance();
+    String patron = "dd/MM/yyyy";
+    SimpleDateFormat format = new SimpleDateFormat(patron);
+    Date jugada = hoy.getTime();
+    String fecha= format.format(jugada);
+    
     
     
     private int prevHP=0;
@@ -175,9 +185,9 @@ public class generadorTablero extends JPanel implements MouseListener {
                 g2.drawRect(j*tamanioCeldas, i*tamanioCeldas, tamanioCeldas, tamanioCeldas);
                 
                 if((i+j)%2==0){
-                    g2.setColor(Color.LIGHT_GRAY);
+                    g2.setColor(Color.WHITE);
                 }else{
-                    g2.setColor(Color.DARK_GRAY);
+                    g2.setColor(Color.LIGHT_GRAY);
                 }
                 
                 //Obtencion de pixeles como tal
@@ -361,6 +371,11 @@ public class generadorTablero extends JPanel implements MouseListener {
                                  //Revisar si ya no hay fichas para indicar wins
                                  if(checkWins(turnos)){
                                      JOptionPane.showMessageDialog(this, CONTRICANTE.getUsername()+" SE HA QUEDADO SIN FICHAS | "+PLAYER.getUsername()+" HA GANADO LA PARTIDA");
+                                     String mensaje= "FECHA: "+fecha+" | JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
+                                            +" | PERDEDOR: "+CONTRICANTE.getUsername().toUpperCase()+" (SE QUEDO SIN FICHAS) | GANADOR:" +PLAYER.getUsername().toUpperCase();
+                                    //JOptionPane.showMessageDialog(screen, CONTRICANTE.getUsername().toUpperCase()+"se ha RENDIDO. GANA "+PLAYER.getUsername().toUpperCase() );
+                                    PLAYER.registrarPartida(mensaje);
+                                    CONTRICANTE.registrarPartida(mensaje);
                                      PLAYER.addPoints(3);
                                      gameScreen.dispose();
                                      menuPrincipal ventana = new menuPrincipal();
@@ -386,7 +401,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
 
-                                System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
+                                //System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
                                 casillasDisponibles.clear();
                                 repaint();
                              }
@@ -395,7 +410,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                        }
                    }else if(turnos==false){
                        if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
-                            System.out.println("Aqui hay una ficha!");
+                            //System.out.println("Aqui hay una ficha!");
                             fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
                             previousX=filaSeleccionada;
                             previousY=columnaSeleccionada;
@@ -414,7 +429,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                             }else if(fichaOnHold!= null && typFichaActual!= fichaOnHold.getTypeFicha()){
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
-                                System.out.println("Casilla Deseleccionada: FICHA NO DEL TIPO OBTENIDO");
+                               // System.out.println("Casilla Deseleccionada: FICHA NO DEL TIPO OBTENIDO");
                                 casillasDisponibles.clear();
                                 repaint();
                             }
@@ -428,6 +443,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 
                                 if(checkWins(turnos)){
                                     JOptionPane.showMessageDialog(this, PLAYER.getUsername()+" SE HA QUEDADO SIN FICHAS | "+CONTRICANTE.getUsername()+" HA GANADO LA PARTIDA");
+                                    //JOptionPane.showMessageDialog(this, PLAYER.getUsername()+" SE HA QUEDADO SIN FICHAS | "+PLAYER.getUsername()+" HA GANADO LA PARTIDA");
+                                     String mensaje= "FECHA: "+fecha+"| JUEGO ENTRE "+PLAYER.getUsername().toUpperCase()+" Y "+CONTRICANTE.getUsername().toUpperCase()
+                                            +" | PERDEDOR: "+PLAYER.getUsername().toLowerCase()+" (SE QUEDO SIN FICHAS) | GANADOR:" +CONTRICANTE.getUsername().toUpperCase();
+                                    //JOptionPane.showMessageDialog(screen, CONTRICANTE.getUsername().toUpperCase()+"se ha RENDIDO. GANA "+PLAYER.getUsername().toUpperCase() );
+                                    PLAYER.registrarPartida(mensaje);
+                                    CONTRICANTE.registrarPartida(mensaje);
                                     CONTRICANTE.addPoints(3);
                                     gameScreen.dispose();
                                     menuPrincipal ventana = new menuPrincipal();
@@ -450,7 +471,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 filaSeleccionada=-1;
                                 columnaSeleccionada=-1;
 
-                                System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
+                               // System.out.println("Casilla Deseleccionada: FICHA DE CONTRICANTE");
                                 casillasDisponibles.clear();
                                 repaint();
                              }
@@ -487,7 +508,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                if(tableroLogico[fDestino][cDestino]==null){
                                    if(Math.abs(fDestino-fOrigen)>1 || Math.abs(cDestino -cOrigen)>1){
                                        movimientoValido=false;
-                                       System.out.println("CASILLA FUERA DEL RANGO DE MOVIMIENTO VALIDO DEL NECROMANCER");
+                                      // System.out.println("CASILLA FUERA DEL RANGO DE MOVIMIENTO VALIDO DEL NECROMANCER");
                                    }
                                }
                            }
@@ -495,7 +516,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                            
                            if(fichaOnHold!=null && fichaOnHold.getName().equals("ZOMBIE")){
                                movimientoValido=false;
-                               System.out.println("NO SE PUEDE MOVER EL ZOMBIE");
+                              // System.out.println("NO SE PUEDE MOVER EL ZOMBIE");
                            }
                            
                            
@@ -635,7 +656,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         //iconoFicha.paintIcon(this,g,x,y);
     }
     
-    private void calcularMovimientos(int fila, int columna){
+    private final void calcularMovimientos(int fila, int columna){
         casillasDisponibles.clear();
         
         int[][] direcciones=fichaOnHold.getdirecciones();
@@ -751,7 +772,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                 panel.removeAll();
                 texto.setText("NECROMANCER se mueve a Casilla ["+(fila+1)+","+(columna+1)+"]");
                 panel.add(texto);
-                texto.setBounds(145, 5, 600, 100);
+                texto.setBounds(125, 5, 600, 100);
                 texto.setFont(new Font("Serif", Font.BOLD, 18));
                 panel.repaint();
                 break;
@@ -793,7 +814,7 @@ public class generadorTablero extends JPanel implements MouseListener {
         panel.removeAll();
         texto.setText(atacante.getName().toUpperCase()+" ha ELIMINADO a "+atacado.getName().toUpperCase());
         panel.add(texto);
-        texto.setBounds(125, 5, 600, 100);
+        texto.setBounds(110, 5, 600, 100);
         texto.setFont(new Font("Serif", Font.BOLD, 20));
         panel.repaint();
         
@@ -820,12 +841,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                 panel.removeAll();
                 texto.setText("[ATAQUE ESPECIAL-LANZA]: "+atacante.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:2");
                 stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
-                panel.add(texto);
                 texto.setBounds(25, 0, 600, 100);
                 texto.setFont(new Font("Serif", Font.BOLD, 15));
-                panel.add(stats);
                 stats.setBounds(100, 15, 600, 100);
                 stats.setFont(new Font("Serif", Font.BOLD, 15));
+                panel.add(texto);
+                panel.add(stats);
                 panel.repaint();
             } 
         }else{
@@ -833,12 +854,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                 panel.removeAll();
                 texto.setText("[ATAQUE ESPECIAL-CHUPAR SANGRE]: "+atacante.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:1");
                 stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
-                panel.add(texto);
                 texto.setBounds(25, 0, 600, 100);
                 texto.setFont(new Font("Serif", Font.BOLD, 15));
-                panel.add(stats);
                 stats.setBounds(100, 15, 600, 100);
                 stats.setFont(new Font("Serif", Font.BOLD, 15));
+                panel.add(stats);
+                panel.add(texto);
                 panel.repaint();
             }else if(atacante.getName().equals("NECROMANCER")){
                 panel.removeAll();
@@ -897,7 +918,7 @@ public class generadorTablero extends JPanel implements MouseListener {
     }
     
     
-    private boolean revYAtaque(MouseEvent e){
+    private final boolean revYAtaque(MouseEvent e){
         MouseEvent a=e;
         for(Point p:casillasDisponibles){
             int pX= p.x;
@@ -919,14 +940,14 @@ public class generadorTablero extends JPanel implements MouseListener {
                     if((diffFila<=2 && diffColumna<=2)&& (diffFila+diffColumna>0)){
                         ataqueValido=true;
                     }else{
-                        System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
+                        //System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
                         return false;
                     }
                 }else if(fichaOnHold!= null && fichaOnHold.getName().equals("HOMBRE LOBO")){
                     if((diffFila<=1 && diffColumna<=1)&& (diffFila+diffColumna>0)){
                         ataqueValido=true;
                     }else{
-                        System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
+                        //System.out.println("NOS SALIMOS DEL RANGO DE ATAQUE");
                         return false;
                     }
                 }else{
@@ -945,7 +966,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                 if(fichaOnHold.getName().equals("NECROMANCER")){
                                     //Evaluacion de dsitancia aqui
                                     int distanciaMax= Math.max(diffFila, diffColumna);
-                                    System.out.println("ENTRA A COMPROBAR DISTANCIA");
+                                    //System.out.println("ENTRA A COMPROBAR DISTANCIA");
                                     if(distanciaMax==2){
                                         boolean ataqueEspecial=true;
                                         boolean ataqueNormal=false;
@@ -955,27 +976,50 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         if(atacado!=null){
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             
-                                            if(choice==JOptionPane.YES_OPTION){
-                                               if(ataqueNormal){  
-                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
-                                                        int damage = fichaOnHold.getAtaqueB();
-                                                        Vampire vampTemp = (Vampire)atacado;
-                                                        vampTemp.recibirAutodanio(damage);
-                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+                                            if(choice==JOptionPane.YES_OPTION){                                               
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    pAnuncios.removeAll();
+                                                    JLabel texto= new JLabel();
+                                                    JLabel stats= new JLabel();
+                                                    texto.setText("[ATAQUE ESPECIAL-LANZA]: "+fichaOnHold.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:2");
+                                                    stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
+                                                    texto.setBounds(25, 0, 600, 100);
+                                                    texto.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    stats.setBounds(100, 15, 600, 100);
+                                                    stats.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    pAnuncios.add(texto);
+                                                    pAnuncios.add(stats);
+                                                    pAnuncios.repaint();
+                                                    
+                                                    //Revision directa para evitar bug
+                                                    if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                                        Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                                        //check here
+                                                        msgEliminacion(pAnuncios, fichaOnHold, fichaEliminated);
+                                                        ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                                        JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                                        cJugador.add(fichaEliminada);
+                                                        cJugador.revalidate();
+                                                        cJugador.repaint();
 
+                                                        if(ruletaGeneral.reducirPesoFicha(fichaEliminated.getTypeFicha())){
+                                                            System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                                        }else{
+                                                            System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                                        }
+                                                        tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                                        eliminateZombies(turnos);
+                                                        return true;
                                                     }else{
-                                                      fichaOnHold.ataque(atacado);
-                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                        System.out.println("STATS DE CONTRICANTE:"
+                                                        + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                                        +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                                        return true;
                                                     }
 
-
-                                                   
-                                                }
-
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                                    
+                                                    
+                                                    
                                                 
                                             }else if(choice==JOptionPane.NO_OPTION){
                                                 break;
@@ -1000,27 +1044,9 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         if(atacado!=null){
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             if(choice==JOptionPane.YES_OPTION){
-                                               if(ataqueNormal){  
-                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
-                                                        int damage = fichaOnHold.getAtaqueB();
-                                                        Vampire vampTemp = (Vampire)atacado;
-                                                        vampTemp.recibirAutodanio(damage);
-                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
-
-                                                    }else{
+                                                
                                                       fichaOnHold.ataque(atacado);
-                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
-                                                    }
-
-
-                                                   
-                                                }
-
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
-                                               
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
                                             }else if(choice==JOptionPane.NO_OPTION){
                                                 break;
 
@@ -1058,16 +1084,10 @@ public class generadorTablero extends JPanel implements MouseListener {
                                                     }else{
                                                       fichaOnHold.ataque(atacado);
                                                       msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
-                                                    }
-
-
-                                                   
+                                                    }  
                                                 }
 
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                               
                                                 
                                             }else if(choice==JOptionPane.NO_OPTION){
                                                 break;
@@ -1092,13 +1112,55 @@ public class generadorTablero extends JPanel implements MouseListener {
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             
                                             if(choice==JOptionPane.YES_OPTION){
-                                              fichaOnHold.ataque(atacado);
-                                              msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
-                                            }else if(choice==JOptionPane.NO_OPTION){
-                                                 if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                                fichaOnHold.ataque(atacado);
+                                                msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+                                                
+                                            }else if(choice==JOptionPane.NO_OPTION){ 
+                                                     Vampire holder = (Vampire) fichaOnHold;
+                                                    holder.chuparSangre(atacado);
+                                                    JLabel texto = new JLabel();
+                                                    JLabel stats= new JLabel();
+                                                    pAnuncios.removeAll();
+                                                    texto.setText("[ATAQUE ESPECIAL-CHUPAR SANGRE]: "+fichaOnHold.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:1");
+                                                    stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
+                                                    texto.setBounds(25, 0, 600, 100);
+                                                    texto.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    stats.setBounds(100, 15, 600, 100);
+                                                    stats.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    pAnuncios.add(stats);
+                                                    pAnuncios.add(texto);
+                                                    pAnuncios.repaint();
+                                                    
+                                                    
+                                                    //Revision directa para evitar bug
+                                                    if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                                        Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                                        //check here
+                                                        msgEliminacion(pAnuncios, fichaOnHold, fichaEliminated);
+                                                        ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                                        JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                                        cJugador.add(fichaEliminada);
+                                                        cJugador.revalidate();
+                                                        cJugador.repaint();
+
+                                                        if(ruletaGeneral.reducirPesoFicha(fichaEliminated.getTypeFicha())){
+                                                            System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                                        }else{
+                                                            System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                                        }
+                                                        tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                                        eliminateZombies(turnos);
+                                                        return true;
+                                                    }else{
+                                                        System.out.println("STATS DE CONTRICANTE:"
+                                                        + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                                        +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                                        return true;
+                                                    }
+                                                    
+                                                    
+                                                    
+                                                
                                                
                                             }else if(choice==JOptionPane.CANCEL_OPTION){
                                                 break;
@@ -1193,29 +1255,50 @@ public class generadorTablero extends JPanel implements MouseListener {
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             
                                             if(choice==JOptionPane.YES_OPTION){
-                                               if(ataqueNormal){  
-                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
-                                                        int damage = fichaOnHold.getAtaqueB();
-                                                        Vampire vampTemp = (Vampire)atacado;
-                                                        vampTemp.recibirAutodanio(damage);
-                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
-
-                                                    }else{
-                                                      fichaOnHold.ataque(atacado);
-                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
-                                                    }
-
-
-                                                   
-                                                }
-
-                                                if(ataqueEspecial){
                                                     fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                                     pAnuncios.removeAll();
+                                                    JLabel texto= new JLabel();
+                                                    JLabel stats= new JLabel();
+                                                    texto.setText("[ATAQUE ESPECIAL-LANZA]: "+fichaOnHold.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:2");
+                                                    stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
+                                                    texto.setBounds(25, 0, 600, 100);
+                                                    texto.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    stats.setBounds(100, 15, 600, 100);
+                                                    stats.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    pAnuncios.add(texto);
+                                                    pAnuncios.add(stats);
+                                                    pAnuncios.repaint();
+                                                    
+                                                    //Revision directa para evitar bug
+                                                    if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                                        Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                                        //check here
+                                                        msgEliminacion(pAnuncios, fichaOnHold, fichaEliminated);
+                                                        ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                                        JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                                        cJugador.add(fichaEliminada);
+                                                        cJugador.revalidate();
+                                                        cJugador.repaint();
+
+                                                        if(ruletaGeneral.reducirPesoFicha(fichaEliminated.getTypeFicha())){
+                                                            System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                                        }else{
+                                                            System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                                        }
+                                                        tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                                        eliminateZombies(turnos);
+                                                        return true;
+                                                    }else{
+                                                        System.out.println("STATS DE CONTRICANTE:"
+                                                        + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                                        +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                                        return true;
+                                                    }
+                                                    
+                                                
                                                
                                             }else if(choice==JOptionPane.NO_OPTION){
-                                                System.out.println("XD");
+                                                //System.out.println("XD");
                                                 break;
                                             }
                                             
@@ -1239,29 +1322,15 @@ public class generadorTablero extends JPanel implements MouseListener {
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             
                                             if(choice==JOptionPane.YES_OPTION){
-                                               if(ataqueNormal){  
-                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
-                                                        int damage = fichaOnHold.getAtaqueB();
-                                                        Vampire vampTemp = (Vampire)atacado;
-                                                        vampTemp.recibirAutodanio(damage);
-                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
-
-                                                    }else{
+                                               if(ataqueNormal){
                                                       fichaOnHold.ataque(atacado);
-                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
-                                                    }
-
-
-                                                   
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);   
                                                 }
 
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                                
                                                
                                             }else if(choice==JOptionPane.NO_OPTION){
-                                                System.out.println("XD");
+                                                //System.out.println("XD");
                                                 break;
 
                                             }
@@ -1314,14 +1383,8 @@ public class generadorTablero extends JPanel implements MouseListener {
 
                                                    
                                                 }
-
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
-                                                
                                             }else if(choice==JOptionPane.NO_OPTION){
-                                                System.out.println("XD");
+                                               // System.out.println("XD");
                                                 break;
 
                                             }
@@ -1330,7 +1393,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                                        
 //                                       msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                     }else{
-                                        System.out.println("ATAQUE NO VALIDO PARA HOMBRE LOBO");
+                                        //System.out.println("ATAQUE NO VALIDO PARA HOMBRE LOBO");
                                         return false;
                                     }
                                     
@@ -1346,12 +1409,53 @@ public class generadorTablero extends JPanel implements MouseListener {
                                             if(choice==JOptionPane.YES_OPTION){
                                                 fichaOnHold.ataque(atacado);
                                                 msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
-                                            }else if(choice==JOptionPane.NO_OPTION){
+                                            }else if(choice==JOptionPane.NO_OPTION){  
                                                 
-                                                  if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
+                                                    Vampire holder = (Vampire) fichaOnHold;
+                                                    holder.chuparSangre(atacado);
+                                                     JLabel texto = new JLabel();
+                                                    JLabel stats= new JLabel();
+                                                    pAnuncios.removeAll();
+                                                    texto.setText("[ATAQUE ESPECIAL-CHUPAR SANGRE]: "+fichaOnHold.getName().toUpperCase()+"-->"+atacado.getName().toUpperCase()+". Daño:1");
+                                                    stats.setText(atacado.getName().toUpperCase()+" SHD:"+atacado.getPreviousESC()+"| HP:"+atacado.getPreviousHP()+" --> SHD:"+atacado.getEscudo()+" | HP:"+atacado.getVida());
+                                                    texto.setBounds(25, 0, 600, 100);
+                                                    texto.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    stats.setBounds(100, 15, 600, 100);
+                                                    stats.setFont(new Font("Serif", Font.BOLD, 15));
+                                                    pAnuncios.add(stats);
+                                                    pAnuncios.add(texto);
+                                                    pAnuncios.repaint();
+                                                    
+                                                    //Revision directa para evitar bug
+                                                    if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
+                                                        Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                                        //check here
+                                                        msgEliminacion(pAnuncios, fichaOnHold, fichaEliminated);
+                                                        ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
+                                                        JLabel fichaEliminada = new JLabel(imagenEliminada);
+                                                        cJugador.add(fichaEliminada);
+                                                        cJugador.revalidate();
+                                                        cJugador.repaint();
+
+                                                        if(ruletaGeneral.reducirPesoFicha(fichaEliminated.getTypeFicha())){
+                                                            System.out.println("SE HA ELIMINADO UNA FICHA DE LA RULETA");
+                                                        }else{
+                                                            System.out.println("YA NO QUEDAN FICHAS DE ESTE TIPO EN LA RULETA");
+                                                        }
+                                                        tableroLogico[filaSeleccionada][columnaSeleccionada]=null;
+                                                        eliminateZombies(turnos);
+                                                        return true;
+                                                    }else{
+                                                        System.out.println("STATS DE CONTRICANTE:"
+                                                        + "\n Escudo: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getEscudo()
+                                                        +"\nVida: "+tableroLogico[filaSeleccionada][columnaSeleccionada].getVida());
+                                                        return true;
+                                                    }
+                                                    
+                                                    
+                                                    
+                                                    
+                                                
                                                 
                                             }else if(choice==JOptionPane.CANCEL_OPTION){
                                                 break;
@@ -1360,8 +1464,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                                         }
                                     }else{
                                        Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                    boolean ataqueEspecial=false;
-                                    boolean ataqueNormal=true;
+                                        boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
                                     
                                     
                                     //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
@@ -1385,13 +1489,7 @@ public class generadorTablero extends JPanel implements MouseListener {
 
 
                                                    
-                                                }
-
-                                                if(ataqueEspecial){
-                                                    fichaOnHold.ataqueEspecial(atacado);
-                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
-                                                }
-                                               
+                                                } 
                                             }else if(choice==JOptionPane.NO_OPTION){
                                                 break;
                                             }

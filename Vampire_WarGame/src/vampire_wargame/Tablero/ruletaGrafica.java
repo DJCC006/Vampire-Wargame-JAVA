@@ -52,9 +52,9 @@ public class ruletaGrafica extends JPanel {
     private boolean girando = false;
     
     public ruletaGrafica(){
-        ImageIcon wolf = new ImageIcon("src/resources/wolfIcon.png");
-        ImageIcon vamp = new ImageIcon("src/resources/vampIcon.png");
-        ImageIcon death = new ImageIcon("src/resources/deathIcon.png");
+        ImageIcon wolf = new ImageIcon("src/resources/icons/bwolfcon.png");
+        ImageIcon vamp = new ImageIcon("src/resources/icons/bvampcon.png");
+        ImageIcon death = new ImageIcon("src/resources/icons/bNecrocon.png");
         
         
         iconos[0]= wolf;
@@ -104,7 +104,7 @@ public class ruletaGrafica extends JPanel {
         
         angulo= 360-(index*seccion+seccion/2);
         //angulo= index*seccion+seccion/2;
-        //if(angulo>=360) angulo-=360;
+        if(angulo>=360) angulo-=360;
         angulo =angulo%360;
         repaint();
     }
@@ -385,6 +385,7 @@ public class ruletaGrafica extends JPanel {
         int x= (w-size)/2;
         int y=(h-size)/2;
         
+        
         int centerX= w/2;
         int centerY=h/2;
         
@@ -411,13 +412,16 @@ public class ruletaGrafica extends JPanel {
         
         g2d.rotate(-Math.toRadians(angulo), centerX, centerY);
         
-        
+        int distanciaBorde=150;
+        int tamanoPunta=20;
         Polygon puntero = new Polygon();
-        puntero.addPoint(centerX, y-10);
-        puntero.addPoint(centerX-10, y+10);
-        puntero.addPoint(centerX+10, y+10);
+        puntero.addPoint(centerX+distanciaBorde-tamanoPunta,centerY );
+        puntero.addPoint(centerX+distanciaBorde, centerY-10);
+        puntero.addPoint(centerX+distanciaBorde, centerY+10);
+        
         g2d.setColor(Color.red);
         g2d.fillPolygon(puntero);
+        
         
         g2d.dispose();
         

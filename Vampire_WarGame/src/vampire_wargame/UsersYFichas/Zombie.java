@@ -8,7 +8,7 @@ package vampire_wargame.UsersYFichas;
  *
  * @author David
  */
-public class Zombie extends Ficha{
+public  class  Zombie extends Ficha{
     public Zombie(){
         super(1,1,0,4);
         int[][] dirZombie = {

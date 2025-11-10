@@ -245,16 +245,26 @@ public class ventanaNewAcc {
     }
     
     
+   private boolean checkUsernameRecursivo(String username, int index){
+       if(index>=controladorUsuarios.getInstancia().getDBUsers().size()){
+           return true;
+       }
+       
+       Usuario user = controladorUsuarios.getInstancia().getDBUsers().get(index);
+       
+       if(user.getUsername().equalsIgnoreCase(username)){
+           JOptionPane.showMessageDialog(screen, "El nombre de usuario ya existe, por favor utilice uno distinto");
+           return false;
+       }
+       
+       
+       return checkUsernameRecursivo(username, index+1);
+   }
+    
+    
+   
     private boolean checkUsername(String username){
-        for(int i=0; i<controladorUsuarios.getInstancia().getDBUsers().size(); i++){
-            Usuario user= controladorUsuarios.getInstancia().getDBUsers().get(i);
-            if(user.getUsername().equalsIgnoreCase(username)){
-                JOptionPane.showMessageDialog(screen, "El nombre de usuario ya existe, porfavor utilice uno distinto");
-                return false;
-                
-            } 
-        }
-        return true;
+        return checkUsernameRecursivo(username,0);
     }
     
     

@@ -4,12 +4,14 @@
  */
 package vampire_wargame.Tablero;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,6 +20,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import javax.swing.border.Border;
 
 /**
  *
@@ -72,7 +75,7 @@ public class ruletaGen extends JPanel {
       ruletaImag= new ImageIcon("src\\resources\\ruletaIcon.png");
       wolfImag = new ImageIcon("src\\resources\\icons\\bwolfcon.png");
       vampImag = new ImageIcon("src\\resources\\icons\\bvampcon.png");
-      necroImag = new ImageIcon("src\\resources\\icons\\nNecrocon.png");
+      necroImag = new ImageIcon("src\\resources\\icons\\bNecrocon.png");
      
       
       //this.setLayout(null);
@@ -81,8 +84,15 @@ public class ruletaGen extends JPanel {
       texto.setBounds(0, 0, 300, 200);
       texto.setIcon(ruletaImag);
       
+      
+       int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+      
       JButton btGirar = new JButton("GIRAR RULETA");
-      btGirar.setBounds(100, 290, 200, 50);
+      btGirar.setBounds(80, 300, 200, 50);
+      btGirar.setBackground(Color.GRAY);
+      btGirar.setBorder(bordeBoton);
       
        btGirar.addActionListener(new ActionListener(){
           @Override 
@@ -105,79 +115,70 @@ public class ruletaGen extends JPanel {
               */
               
               
-              
-              
-              int  resultado=girarRuleta();
-              
-              
-              
-              System.out.println("resultado: "+resultado);
-             switch(resultado){
-                  case 1:
-                      texto.setIcon(wolfImag);
-                      System.out.println("RESULTADO: HOMBRE LOBO");
-                      giros=0;
-                      fichaObtenida="HOMBRE LOBO";
-                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: HOMBRE LOBO");
-                      break;
-                      
-                      
-                  case 2:
-                      texto.setIcon(vampImag);
-                      System.out.println("RESULTADO: VAMPIRO");
-                      giros=0;
-                      fichaObtenida="VAMPIRO";
-                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: VAMPRIO");
-                      break;
-                      
-                  case 3:
-                      texto.setIcon(necroImag);
-                      System.out.println("RESULTADO: NECROMANCER");
-                      giros=0;
-                      fichaObtenida="MUERTE";
-                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: MUERTE");
-                      break;
-                      
-                  case 0:
-                      texto.setIcon(nullIcon);
-                      System.out.println("RESULTADO: ESPACIO VACIO");
-                      int extra= manejarResultadoNulo(); 
-                      switch(extra){
-                          case 1:
-                              texto.setIcon(wolfImag);
-                              System.out.println("RESULTADO EXTRA: HOMBRE LOBO");
-                              evaluacionNulos();
-                              break;
-                              
-                          case 2:
-                              texto.setIcon(vampImag);
-                              System.out.println("RESULTADO EXTRA: VAMPIRO");
-                              evaluacionNulos();
-                              break;
-                          case 3:
-                              texto.setIcon(necroImag);
-                              System.out.println("RESULTADO EXTRA: NECROMANCER");
-                              evaluacionNulos();
-                              break;
-                      }
-
-                      break;
-              }
-                  
-                  
-             lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
-//              graphics.girarHacia(fichaObtenida);
-                 
-             
-                 
-                  Timer timer = new Timer(2000, new ActionListener(){
+               Timer timer = new Timer(2000, new ActionListener(){
                 @Override
                 public void actionPerformed(ActionEvent e){ //Ya la estructura del actionPerfomed ejecuta la logica de cerrarse despues del delay
                     ((Timer)e.getSource()).stop();
                     
                     SwingUtilities.invokeLater(()->{
                         graphics.detenerGiro();
-                        
+                        graphics.posicionarFicha(fichaObtenida);
+                        int  resultado=girarRuleta();
+                         switch(resultado){
+                          case 1:
+                              texto.setIcon(wolfImag);
+                              System.out.println("RESULTADO: HOMBRE LOBO");
+                              giros=0;
+                              fichaObtenida="HOMBRE LOBO";
+                              JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: HOMBRE LOBO");
+                              break;
+
+
+                          case 2:
+                              texto.setIcon(vampImag);
+                              System.out.println("RESULTADO: VAMPIRO");
+                              giros=0;
+                              fichaObtenida="VAMPIRO";
+                              JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: VAMPIRO");
+                              break;
+
+                          case 3:
+                              texto.setIcon(necroImag);
+                              System.out.println("RESULTADO: NECROMANCER");
+                              giros=0;
+                              fichaObtenida="MUERTE";
+                              JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: MUERTE");
+                              break;
+
+                          case 0:
+                              texto.setIcon(nullIcon);
+                              System.out.println("RESULTADO: ESPACIO VACIO");
+                              int extra= manejarResultadoNulo(); 
+                              switch(extra){
+                                  case 1:
+                                      texto.setIcon(wolfImag);
+                                      System.out.println("RESULTADO EXTRA: HOMBRE LOBO");
+                                      evaluacionNulos();
+                                      break;
+
+                                  case 2:
+                                      texto.setIcon(vampImag);
+                                      System.out.println("RESULTADO EXTRA: VAMPIRO");
+                                      evaluacionNulos();
+                                      break;
+                                  case 3:
+                                      texto.setIcon(necroImag);
+                                      System.out.println("RESULTADO EXTRA: NECROMANCER");
+                                      evaluacionNulos();
+                                      break;
+                              }
+
+                              break;
+                      }
+
+
+                     lastSelected=resultado;//guardar el tipo de ficha seleccionada por cada tirada;
+
                         graphics.posicionarFicha(fichaObtenida);
                         tableroController.setTypFicha(lastSelected);
                         tableroController.repaint(); 
@@ -186,6 +187,13 @@ public class ruletaGen extends JPanel {
                     
                     }         
                 });
+              //System.out.println("resultado: "+resultado);
+            
+//              graphics.girarHacia(fichaObtenida);
+                 
+             
+                 
+                 
                 timer.setRepeats(false);
                 timer.start();
          
@@ -477,6 +485,9 @@ public class ruletaGen extends JPanel {
                   case 0:
                       texto.setIcon(nullIcon);
                       System.out.println("RESULTADO: ESPACIO VACIO");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE NULO");
+                      tableroController.modifyTurnos(false);
+                      giros=0;
                       break;
               }
               
@@ -526,7 +537,7 @@ public class ruletaGen extends JPanel {
               int pesos = evaluacionPesos(turnosControlador);
               if(pesos==4){
                   if(giros!=2){
-                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, CUENTA CON TIRO EXTRA");
                   }else{
                       JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(false);
@@ -536,7 +547,7 @@ public class ruletaGen extends JPanel {
                   }
               }else if(pesos<=3){
                   if(giros!=3){
-                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, CUENTA CON TIRO EXTRA");
                   }else{
                       JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(false);
@@ -556,7 +567,7 @@ public class ruletaGen extends JPanel {
                int pesos = evaluacionPesos(turnosControlador);
               if(pesos==4){
                   if(giros!=2){
-                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, CUENTA CON TIRO EXTRA");
                       
                   }else{
                       JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
@@ -567,7 +578,7 @@ public class ruletaGen extends JPanel {
                   }
               }else if(pesos==3){
                   if(giros!=3){
-                     JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
+                     JOptionPane.showMessageDialog(screen, "TIRO NULO, CUENTA CON TIRO EXTRA");
                   }else{
                      JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(true);

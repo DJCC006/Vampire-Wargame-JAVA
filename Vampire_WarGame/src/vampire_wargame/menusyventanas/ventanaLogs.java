@@ -53,15 +53,12 @@ public class ventanaLogs {
         
         Object[][] data= new Object[sizeActual][];
         
-        for(int i=0; i< sizeActual ; i++ ){
-            data[i]= new Object[1];
-            data[i][0]=controladorLogged.getInstancia().getUsuarioLogged().getLogs().get(i);
-        }
+        obtenerLogsRecursiva(data,0);
         
         JTable tablaLogs = new JTable( data, columnas);
         tablaLogs.getTableHeader().setReorderingAllowed(false);
         JScrollPane panelScroll = new JScrollPane(tablaLogs);
-        panelScroll.setBounds(100, 115, 500, 300);
+        panelScroll.setBounds(65, 115, 700, 300);
         
         
         
@@ -97,4 +94,21 @@ public class ventanaLogs {
     public static void main(String[] args) {
         ventanaLogs ventana = new ventanaLogs();
     }
+    
+    
+    
+    private void obtenerLogsRecursiva(Object[][] data, int index){
+        if(index>=data.length){
+            return;
+        }
+        
+        Object logEntry = controladorLogged.getInstancia().getUsuarioLogged().getLogs().get(index);
+        data[index]=new Object[1];
+        data[index][0]=logEntry;
+        
+        obtenerLogsRecursiva(data,index+1);
+        
+    }
+    
+    
 }
