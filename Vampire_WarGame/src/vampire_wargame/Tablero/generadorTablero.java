@@ -1071,9 +1071,34 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     }
                                     
                                 }else{
-                                    Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                    boolean ataqueEspecial=false;
-                                    boolean ataqueNormal=true;
+                                    if(fichaOnHold.getName().equals("VAMPIRO")){
+                                        Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        boolean ataqueEspecial=true;
+                                        boolean ataqueNormal=true;
+                                        Object[] options= {"Ataque Normal", "Ataque Especial", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                              fichaOnHold.ataque(atacado);
+                                              msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                 if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                               
+                                            }else if(choice==JOptionPane.CANCEL_OPTION){
+                                                break;
+                                            }
+                                            
+                                        }
+                                    }else{
+                                       Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
+                                    
+                                    
                                     //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
                                     
                                         Object[] options= {"Ataque Normal", "Volver"};
@@ -1105,11 +1130,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                                             }else if(choice==JOptionPane.NO_OPTION){
                                                 break;
                                             }
-                                            
-                                        }
-                                    
-                                    
-                                    
+                                        } 
+                                    }
 //                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
 //                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
 //                                    System.out.println("ATAQUE NORMAL NO NEGROMANCER");
@@ -1301,11 +1323,37 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     }
                                     
                                 }else{
+                                    if(fichaOnHold.getName().equals("VAMPIRO")){
+                                        Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        boolean ataqueEspecial=true;
+                                        boolean ataqueNormal=true;
+                                        Object[] options= {"Ataque Normal", "Ataque Especial", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                                fichaOnHold.ataque(atacado);
+                                                msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                
+                                                  if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                                
+                                            }else if(choice==JOptionPane.CANCEL_OPTION){
+                                                break;
+                                            }
+                                            
+                                        }
+                                    }else{
+                                       Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    boolean ataqueEspecial=false;
+                                    boolean ataqueNormal=true;
                                     
-                                     boolean ataqueEspecial=false;
-                                     boolean ataqueNormal=true;
-                                     //Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                      Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    
+                                    //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    
                                         Object[] options= {"Ataque Normal", "Volver"};
                                         if(atacado!=null){
                                             int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
@@ -1331,14 +1379,12 @@ public class generadorTablero extends JPanel implements MouseListener {
                                                     fichaOnHold.ataqueEspecial(atacado);
                                                     msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
                                                 }
-                                                
+                                               
                                             }else if(choice==JOptionPane.NO_OPTION){
-                                                System.out.println("XD");
                                                 break;
-
                                             }
-                                            
-                                        }
+                                        } 
+                                    }
                                     
 //                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
 //                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);

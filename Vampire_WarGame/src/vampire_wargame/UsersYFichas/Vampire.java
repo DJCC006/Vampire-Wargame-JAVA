@@ -4,6 +4,8 @@
  */
 package vampire_wargame.UsersYFichas;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author David
@@ -32,6 +34,7 @@ public class Vampire extends Ficha{
         if(ficha.ptVida>=0){
             if(super.ptVida>=4){
                 super.ptVida=4;//reset a stats
+                JOptionPane.showMessageDialog(null, "HP LLENA");
                 System.out.println("YA SE PUSEE HP A FULL");
             }else if(super.ptVida<4){
                 ficha.ptVida-=1;
