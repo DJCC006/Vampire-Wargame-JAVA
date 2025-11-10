@@ -11,7 +11,6 @@ package vampire_wargame.UsersYFichas;
 public class Zombie extends Ficha{
     public Zombie(){
         super(1,1,0,4);
-        super.setImageIcon("src\\resources\\zombieIcon.png");
         int[][] dirZombie = {
             {-1,0}, //arriba
             {1,0},//abajo

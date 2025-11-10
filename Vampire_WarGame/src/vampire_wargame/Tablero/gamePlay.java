@@ -33,13 +33,21 @@ public class gamePlay {
         this.CONTRICANTE=CONTRICANTE;
         
         SwingUtilities.invokeLater(()-> {
+            String rutaFondo = "src/resources/backgroundWood.jpg";
+            
+            panelFondo panelP= new panelFondo(rutaFondo);
             JFrame screen = new JFrame();
+            screen.setContentPane(panelP);
+            
+            
             screen.setSize(3000, 900);  //Tamaño standard para menus
             screen.setResizable(false);
             screen.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             screen.setLocationRelativeTo(null);
             screen.setLayout(null);
 
+            
+            
             //CONFIG DE RULETA
             JPanel ruletaPanel = new JPanel();
             ruletaGen generadorRuleta= new ruletaGen(ruletaPanel);
@@ -69,26 +77,27 @@ public class gamePlay {
             
             
             panelAnuncios.setBounds(500, 650, 600, 100);
-            panelAnuncios.setBackground(Color.GRAY);
+            panelAnuncios.setBackground(Color.WHITE);
             
             //DISPLAYERS DE PLAYERS
             
             cementerioPlayer.setBounds(1140, 100, 350, 300);
-            cementerioPlayer.setBackground(Color.GRAY);
+            cementerioPlayer.setBackground(Color.WHITE);
             cementerioPlayer.setLayout(new GridLayout(0,3));
             
-            panelTurnos.setBackground(Color.GRAY);
+            panelTurnos.setBackground(Color.WHITE);
             panelTurnos.setBounds(60, 400, 350, 80);
             
             
             JLabel gravePlayerLB= new JLabel("CEMENTERIO "+PLAYER.getUsername().toUpperCase());
             gravePlayerLB.setBounds(1140, 30, 350, 80);
             gravePlayerLB.setFont(new Font("Serif", Font.BOLD, 25));
+            gravePlayerLB.setForeground(new Color(255,215,0));
 
             
             
             cementerioContricante.setBounds(1140, 500, 350, 300);
-            cementerioContricante.setBackground(Color.GRAY);
+            cementerioContricante.setBackground(Color.WHITE);
             cementerioContricante.setLayout(new GridLayout(0,3));
             
             
@@ -96,6 +105,7 @@ public class gamePlay {
             JLabel graveContriLB= new JLabel("CEMENTERIO "+CONTRICANTE.getUsername().toUpperCase());
             graveContriLB.setBounds(1140, 440, 350, 80);
             graveContriLB.setFont(new Font("Serif", Font.BOLD, 25));
+            graveContriLB.setForeground(new Color(255,215,0));
             
             
             

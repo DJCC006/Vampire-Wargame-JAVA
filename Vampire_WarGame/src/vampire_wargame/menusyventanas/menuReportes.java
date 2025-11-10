@@ -4,12 +4,16 @@
  */
 package vampire_wargame.menusyventanas;
 
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.border.Border;
 
 /**
  *
@@ -26,13 +30,22 @@ public class menuReportes {
         screen.setLayout(null);
         
         
+        Container contentPane = screen.getContentPane();
+        contentPane.setBackground(Color.DARK_GRAY);
+        int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+        
         JLabel titulo = new JLabel("MENU REPORTES");
-        titulo.setBounds(150, 50, 700, 100);
+        titulo.setBounds(170, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
+        titulo.setForeground(new Color(255,215,0));
         
         
         JButton btRanking = new JButton("Ranking de Jugadores");
         btRanking.setBounds(300, 180, 200, 50);
+        btRanking.setBackground(Color.GRAY);
+        btRanking.setBorder(bordeBoton);
         
         btRanking.addActionListener(new ActionListener(){
           @Override 
@@ -48,6 +61,8 @@ public class menuReportes {
         
         JButton btLogs = new JButton("Logs de Partidas");
         btLogs.setBounds(300, 250, 200, 50);
+        btLogs.setBackground(Color.GRAY);
+        btLogs.setBorder(bordeBoton);
         
         btLogs.addActionListener(new ActionListener(){
           @Override 
@@ -63,6 +78,8 @@ public class menuReportes {
         
         JButton btSalir = new JButton("Volver");
         btSalir.setBounds(300, 390, 200, 50);
+        btSalir.setBackground(Color.GRAY);
+        btSalir.setBorder(bordeBoton);
         
         btSalir.addActionListener(new ActionListener(){
           @Override 

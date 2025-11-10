@@ -14,7 +14,6 @@ public class Vampire extends Ficha{
 
     public Vampire(){
         super(4,3,5,2);
-        super.setImageIcon("src\\resources\\vampIcon.png");
         int[][] dirVamp= {
             {-1,0}, //arriba
             {1,0},//abajo
@@ -48,7 +47,7 @@ public class Vampire extends Ficha{
         super.ptVida--;
     }
     
-    
+   
     public void recibirAutodanio(int dmg){
         if(super.ptEscudo>0){
             if(super.ptEscudo>= dmg){

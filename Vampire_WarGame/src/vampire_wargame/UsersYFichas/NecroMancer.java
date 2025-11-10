@@ -11,7 +11,6 @@ package vampire_wargame.UsersYFichas;
 public class NecroMancer extends Ficha {
     public NecroMancer(){
         super(4,3,1,3);
-        super.setImageIcon("src\\resources\\deathIcon.png");
         int[][] dirNecro= {
             {-1,0}, //arriba   y,x
             {-2,0},
@@ -48,9 +47,12 @@ public class NecroMancer extends Ficha {
         if(turnos){
             newZomb.setBando("JUGADOR");
             tableroLogico[fila][columna]= newZomb;
+            newZomb.setImageIcon("src\\resources\\icons\\wZombieIcon.png");
         }else{
             newZomb.setBando("CONTRARIO");
+            newZomb.setImageIcon("src\\resources\\icons\\bzombiecon.png");
             tableroLogico[fila][columna]= newZomb;
+            
         }
     }
     

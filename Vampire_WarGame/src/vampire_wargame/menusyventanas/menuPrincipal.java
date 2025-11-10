@@ -4,13 +4,17 @@
  */
 package vampire_wargame.menusyventanas;
 
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.border.Border;
 import vampire_wargame.UsersYFichas.controladorLogged;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
 import vampire_wargame.menusyventanas.menuInicial;
@@ -30,13 +34,23 @@ public class menuPrincipal {
         screen.setLocationRelativeTo(null);
         screen.setLayout(null);
         
+        Container contentPane = screen.getContentPane();
+        contentPane.setBackground(Color.DARK_GRAY);
+        
+        int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+        
         
         JLabel titulo = new JLabel("MENU PRINCIPAL");
-        titulo.setBounds(150, 50, 700, 100);
+        titulo.setBounds(170, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
+        titulo.setForeground(new Color(255,215,0));
         
         JButton btPlay = new JButton("Jugar VAMPIRE WARGAME");
         btPlay.setBounds(300, 180, 200, 50);
+        btPlay.setBackground(Color.GRAY);
+        btPlay.setBorder(bordeBoton);
         
         btPlay.addActionListener(new ActionListener(){
           @Override 
@@ -59,6 +73,8 @@ public class menuPrincipal {
         
         JButton btAccount = new JButton("MI Perfil");
         btAccount.setBounds(300, 250, 200, 50);
+        btAccount.setBackground(Color.GRAY);
+        btAccount.setBorder(bordeBoton);
         
         btAccount.addActionListener(new ActionListener(){
           @Override 
@@ -73,6 +89,8 @@ public class menuPrincipal {
         
         JButton btReportes = new JButton("Reportes");
         btReportes.setBounds(300, 320, 200, 50);
+        btReportes.setBackground(Color.GRAY);
+        btReportes.setBorder(bordeBoton);
         
         btReportes.addActionListener(new ActionListener(){
           @Override 
@@ -85,6 +103,8 @@ public class menuPrincipal {
         
         JButton btSalir = new JButton("Cerrar Sesion");
         btSalir.setBounds(300, 390, 200, 50);
+        btSalir.setBackground(Color.GRAY);
+        btSalir.setBorder(bordeBoton);
         
         btSalir.addActionListener(new ActionListener(){
           @Override 

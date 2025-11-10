@@ -4,13 +4,17 @@
  */
 package vampire_wargame.menusyventanas;
 
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.border.Border;
 import vampire_wargame.UsersYFichas.Usuario;
 import vampire_wargame.UsersYFichas.controladorLogged;
 
@@ -30,23 +34,36 @@ public class ventanaPerfil {
         screen.setLayout(null);
         
         
+        Container contentPane = screen.getContentPane();
+        contentPane.setBackground(Color.DARK_GRAY);
+        
+        int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+        
+        
+        
         JLabel titulo = new JLabel("MI PERFIL");
         titulo.setBounds(100, 50, 700, 100);
         titulo.setFont(new Font("Serif", Font.BOLD, 50));
+        titulo.setForeground(new Color(255,215,0));
         
         //Labels Mostrando informacion de jugador
         JLabel usernameLabel = new JLabel("Username: "+usuarioLogged.getUsername());
         usernameLabel.setBounds(100, 150, 500, 70);
         usernameLabel.setFont(new Font("Serif", Font.BOLD, 25));
+        usernameLabel.setForeground(new Color(255,215,0));
         
         
         JLabel puntosLabel = new JLabel("Puntos: "+usuarioLogged.getPoints());
         puntosLabel.setBounds(100, 200, 500, 70);
         puntosLabel.setFont(new Font("Serif", Font.BOLD, 25));
+        puntosLabel.setForeground(new Color(255,215,0));
         
         JLabel dateLabel = new JLabel("Fecha de Ingreso: "+usuarioLogged.getCreacionDate());
         dateLabel.setBounds(100, 250, 500, 70);
         dateLabel.setFont(new Font("Serif", Font.BOLD, 25));
+        dateLabel.setForeground(new Color(255,215,0));
         
 
         
@@ -57,16 +74,20 @@ public class ventanaPerfil {
             JLabel statusLabel = new JLabel("Estado de Cuenta: ACTIVO");
             statusLabel.setBounds(100, 300, 500, 70);
             statusLabel.setFont(new Font("Serif", Font.BOLD, 25));
+            statusLabel.setForeground(new Color(255,215,0));
             screen.add(statusLabel);
         }else{
             JLabel statusLabel = new JLabel("Estado de Cuenta: DESACTIVA");
             statusLabel.setBounds(100, 300, 500, 70);
             statusLabel.setFont(new Font("Serif", Font.BOLD, 25));
+            statusLabel.setForeground(new Color(255,215,0));
             screen.add(statusLabel);
         }
         
         JButton btChangePssw = new JButton("Cambiar Contraseña");
         btChangePssw.setBounds(500, 250, 200, 50);
+        btChangePssw.setBackground(Color.GRAY);
+        btChangePssw.setBorder(bordeBoton);
         
         btChangePssw.addActionListener(new ActionListener(){
           @Override 
@@ -101,6 +122,8 @@ public class ventanaPerfil {
         
         JButton btBorrar = new JButton("Borrar Cuenta");
         btBorrar.setBounds(500, 320, 200, 50);
+        btBorrar.setBackground(Color.GRAY);
+        btBorrar.setBorder(bordeBoton);
         
         btBorrar.addActionListener(new ActionListener(){
           @Override 
@@ -122,6 +145,8 @@ public class ventanaPerfil {
         
         JButton btSalir = new JButton("Volver");
         btSalir.setBounds(500, 390, 200, 50);
+        btSalir.setBackground(Color.GRAY);
+        btSalir.setBorder(bordeBoton);
         
         btSalir.addActionListener(new ActionListener(){
           @Override 

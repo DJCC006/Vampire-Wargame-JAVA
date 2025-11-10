@@ -105,31 +105,43 @@ public class generadorTablero extends JPanel implements MouseListener {
         //FICHAS CONTRICANTES
         tableroLogico[0][0]= new wolfMan();
         tableroLogico[0][0].setBando("CONTRARIO");
+        tableroLogico[0][0].setImageIcon("src\\resources\\icons\\bwolfcon.png");
         tableroLogico[0][1] = new Vampire();
         tableroLogico[0][1].setBando("CONTRARIO");
+        tableroLogico[0][1].setImageIcon("src\\resources\\icons\\bvampcon.png");
         tableroLogico[0][2]= new NecroMancer();
         tableroLogico[0][2].setBando("CONTRARIO");
+        tableroLogico[0][2].setImageIcon("src\\resources\\icons\\bNecrocon.png");
         tableroLogico[0][3]= new NecroMancer();
         tableroLogico[0][3].setBando("CONTRARIO");
+        tableroLogico[0][3].setImageIcon("src\\resources\\icons\\bNecrocon.png");
         tableroLogico[0][4]= new Vampire();
         tableroLogico[0][4].setBando("CONTRARIO");
+        tableroLogico[0][4].setImageIcon("src\\resources\\icons\\bvampcon.png");
         tableroLogico[0][5]= new wolfMan();
         tableroLogico[0][5].setBando("CONTRARIO");
+        tableroLogico[0][5].setImageIcon("src\\resources\\icons\\bwolfcon.png");
         
         
         //FICHAS DE JUGADOR
         tableroLogico[5][0]= new wolfMan();
         tableroLogico[5][0].setBando("JUGADOR");
+        tableroLogico[5][0].setImageIcon("src\\resources\\icons\\wWolfIcon.png");
         tableroLogico[5][1]= new Vampire();
         tableroLogico[5][1].setBando("JUGADOR");
+        tableroLogico[5][1].setImageIcon("src\\resources\\icons\\wvampIcon.png");
         tableroLogico[5][2]= new NecroMancer();
         tableroLogico[5][2].setBando("JUGADOR");
+        tableroLogico[5][2].setImageIcon("src\\resources\\icons\\wNecroIcon.png");
         tableroLogico[5][3]= new NecroMancer();
         tableroLogico[5][3].setBando("JUGADOR");
+        tableroLogico[5][3].setImageIcon("src\\resources\\icons\\wNecroIcon.png");
         tableroLogico[5][4]= new Vampire();
         tableroLogico[5][4].setBando("JUGADOR");
+        tableroLogico[5][4].setImageIcon("src\\resources\\icons\\wvampIcon.png");
         tableroLogico[5][5]= new wolfMan();
         tableroLogico[5][5].setBando("JUGADOR");
+        tableroLogico[5][5].setImageIcon("src\\resources\\icons\\wWolfIcon.png");
         
         
         //System.out.println("TURNO JUGADOR");  

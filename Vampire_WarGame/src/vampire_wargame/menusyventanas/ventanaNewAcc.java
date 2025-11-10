@@ -4,15 +4,19 @@
  */
 package vampire_wargame.menusyventanas;
 
+import java.awt.Color;
+import java.awt.Container;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import vampire_wargame.UsersYFichas.Usuario;
 import vampire_wargame.UsersYFichas.controladorLogged;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
@@ -35,18 +39,30 @@ public class ventanaNewAcc {
         screen.setLocationRelativeTo(null);
         screen.setLayout(null);
         
+        Container contentPane = screen.getContentPane();
+        contentPane.setBackground(Color.DARK_GRAY);
+        
+        
+        
+         int grosor =3;
+        Color colorBorde= new Color(255,215,0);
+        Border bordeBoton= BorderFactory.createLineBorder(colorBorde,grosor);
+        
         JLabel titulo = new JLabel("NUEVA CUENTA");
         titulo.setFont(new Font("Serif", Font.BOLD, 35));
         titulo.setBounds(110, 50, 500, 50);
+        titulo.setForeground(new Color(255,215,0));
         
         JLabel userlabel = new JLabel("Ingrese un nombre de usuario:");
-        userlabel.setBounds(90, 100, 250, 50);
+        userlabel.setBounds(90, 115, 250, 50);
+        userlabel.setForeground(new Color(255,215,0));
         
         usertxt.setBounds(90, 155, 300, 25);
         
         
         JLabel contraLabel = new JLabel("Ingrese una contraseña:");
         contraLabel.setBounds(90, 175, 250, 50);
+        contraLabel.setForeground(new Color(255,215,0));
         //contratxt.setBounds(90, 210, 300, 25);
         
         
@@ -55,9 +71,13 @@ public class ventanaNewAcc {
         
         
         JButton btCreate = new JButton("Crear Cuenta");
-        btCreate.setBounds(100, 310, 250, 40);
+        btCreate.setBounds(115, 310, 250, 40);
+        btCreate.setBackground(Color.GRAY);
+        btCreate.setBorder(bordeBoton);
         JButton btVolver= new JButton("Volver");
-        btVolver.setBounds(100, 410, 250, 40);
+        btVolver.setBounds(115, 410, 250, 40);
+        btVolver.setBackground(Color.GRAY);
+        btVolver.setBorder(bordeBoton);
         
          btCreate.addActionListener(new ActionListener(){
           @Override 

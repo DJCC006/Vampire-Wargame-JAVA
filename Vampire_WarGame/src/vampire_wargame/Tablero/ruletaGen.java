@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -68,11 +69,11 @@ public class ruletaGen extends JPanel {
       
       
       //pTurnos =tableroController.getPTurnos();
-      ruletaImag= new ImageIcon("src\\resources\\ruletaGIF.gif");
-      wolfImag = new ImageIcon("src\\resources\\wolfIcon.png");
-      vampImag = new ImageIcon("src\\resources\\vampIcon.png");
-      necroImag = new ImageIcon("src\\resources\\deathIcon.png");
-      nullIcon = new ImageIcon("src\\resources\\nuledaIcon.png");
+      ruletaImag= new ImageIcon("src\\resources\\ruletaIcon.png");
+      wolfImag = new ImageIcon("src\\resources\\icons\\bwolfcon.png");
+      vampImag = new ImageIcon("src\\resources\\icons\\bvampcon.png");
+      necroImag = new ImageIcon("src\\resources\\icons\\nNecrocon.png");
+     
       
       //this.setLayout(null);
       
@@ -117,6 +118,7 @@ public class ruletaGen extends JPanel {
                       System.out.println("RESULTADO: HOMBRE LOBO");
                       giros=0;
                       fichaObtenida="HOMBRE LOBO";
+                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: HOMBRE LOBO");
                       break;
                       
                       
@@ -125,6 +127,7 @@ public class ruletaGen extends JPanel {
                       System.out.println("RESULTADO: VAMPIRO");
                       giros=0;
                       fichaObtenida="VAMPIRO";
+                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: VAMPRIO");
                       break;
                       
                   case 3:
@@ -132,6 +135,7 @@ public class ruletaGen extends JPanel {
                       System.out.println("RESULTADO: NECROMANCER");
                       giros=0;
                       fichaObtenida="MUERTE";
+                      JOptionPane.showMessageDialog(screen, "FICHA OBTENIDA: MUERTE");
                       break;
                       
                   case 0:
@@ -173,6 +177,7 @@ public class ruletaGen extends JPanel {
                     
                     SwingUtilities.invokeLater(()->{
                         graphics.detenerGiro();
+                        
                         graphics.posicionarFicha(fichaObtenida);
                         tableroController.setTypFicha(lastSelected);
                         tableroController.repaint(); 
@@ -521,9 +526,9 @@ public class ruletaGen extends JPanel {
               int pesos = evaluacionPesos(turnosControlador);
               if(pesos==4){
                   if(giros!=2){
-                      System.out.println("TIENE OTRO CHANCE MIJO");
+                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
                   }else{
-                      System.out.println("YA SE LE ACABARON LOS CAHANCES PAPI");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(false);
                       giros=0;
                       //tableroController.cTurnosAccess(turnosControlador);
@@ -531,9 +536,9 @@ public class ruletaGen extends JPanel {
                   }
               }else if(pesos<=3){
                   if(giros!=3){
-                      System.out.println("TIENE OTRO CHANCE PAPI");
+                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
                   }else{
-                      System.out.println("YA SE LE ACABARON LOS CHANCES PAPI");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(false);
                       giros=0;
                       //tableroController.cTurnosAccess(turnosControlador);
@@ -541,7 +546,7 @@ public class ruletaGen extends JPanel {
                   }
 
               }else{
-                  System.out.println("NO CUMPLISTE NADA, NI MODO SALTO DE TURNO");
+                  JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                   tableroController.modifyTurnos(false);
                   giros=0;
                   //tableroController.cTurnosAccess(turnosControlador);
@@ -551,10 +556,10 @@ public class ruletaGen extends JPanel {
                int pesos = evaluacionPesos(turnosControlador);
               if(pesos==4){
                   if(giros!=2){
-                      System.out.println("TIENE OTRO CHANCE MIJO");
+                      JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
                       
                   }else{
-                      System.out.println("YA SE LE ACABARON LOS CAHANCES PAPI");
+                      JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(true);
                       giros=0;
                      // tableroController.cTurnosAccess(turnosControlador);
@@ -562,9 +567,9 @@ public class ruletaGen extends JPanel {
                   }
               }else if(pesos==3){
                   if(giros!=3){
-                      System.out.println("TIENE OTRO CHANCE PAPI");
+                     JOptionPane.showMessageDialog(screen, "CUENTA CON TIRO EXTRA");
                   }else{
-                      System.out.println("YA SE LE ACABARON LOS CHANCES PAPI");
+                     JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                       tableroController.modifyTurnos(true);
                       giros=0;
                       //tableroController.cTurnosAccess(turnosControlador);
@@ -572,7 +577,7 @@ public class ruletaGen extends JPanel {
                   }
 
               }else{
-                  System.out.println("NO CUMPLISTE NADA, NI MODO SALTO DE TURNO");
+                  JOptionPane.showMessageDialog(screen, "TIRO NULO, PIERDE TURNO");
                   tableroController.modifyTurnos(true);
                   giros=0;
                  // tableroController.cTurnosAccess(turnosControlador);

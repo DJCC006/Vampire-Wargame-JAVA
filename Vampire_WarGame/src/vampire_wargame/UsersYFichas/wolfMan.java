@@ -12,7 +12,6 @@ public class wolfMan extends Ficha{
     
     public wolfMan(){
         super(5,5,2,1);
-        super.setImageIcon("src\\resources\\wolfIcon.png");
         
         int[][] dirWolf ={
             {-1,0}, //arriba   y,x
