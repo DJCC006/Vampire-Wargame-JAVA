@@ -52,8 +52,6 @@ public class NecroMancer extends Ficha {
             newZomb.setBando("CONTRARIO");
             tableroLogico[fila][columna]= newZomb;
         }
-        
-        System.out.println("NUEVO ZOMBIE SPAWNEADO EN ("+fila+","+columna+")");
     }
     
 }

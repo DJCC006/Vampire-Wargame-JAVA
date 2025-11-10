@@ -20,11 +20,20 @@ public abstract class Ficha {
     protected int Type;
     protected String name;
     
+    
+    protected int previousESC;
+    protected int previousVida;
+    
+    
     public Ficha(int Vida, int Ataque, int Escudo, int Type){
         this.ptAtaque=Ataque;
         this.ptVida=Vida;
         this.ptEscudo=Escudo;
         this.Type=Type;
+        
+        
+        previousESC=ptEscudo;
+        previousVida=ptVida;
     }
     
     
@@ -36,13 +45,18 @@ public abstract class Ficha {
     public void ataque(Ficha ficha){ //se debe que ingresar la ficha a la que se realiza el ataque
         if(ficha.ptEscudo>0){
             if(ficha.ptEscudo> ptAtaque){
+                ficha.setPreviousESC(ficha.ptEscudo);
                 ficha.ptEscudo-=ptAtaque;
             }else if(ficha.ptEscudo<ptAtaque){
                 int Stack= (ficha.ptEscudo-ptAtaque)*-1;//Stack representando al daño restante que queda después de destrozar el escudo
+                ficha.setPreviousESC(ficha.ptEscudo);
                 ficha.ptEscudo=0;
+                ficha.setPreviousHP(ficha.ptVida);
                 ficha.ptVida-=Stack;
             } 
         }else if(ficha.ptEscudo==0 && ficha.ptVida>0){
+            ficha.setPreviousESC(ficha.ptEscudo);
+            ficha.setPreviousHP(ficha.ptVida);
             ficha.ptVida-=ptAtaque;
         }
     }
@@ -90,6 +104,28 @@ public abstract class Ficha {
     
     public void setName(String name){
         this.name= name;
+    }
+    
+    public int getAtaqueB(){
+        return ptAtaque;
+    }
+    
+    
+    public void setPreviousESC(int esc){
+        previousESC=esc;
+    }
+    
+    
+    public void setPreviousHP(int hp){
+        previousVida=hp;
+    }
+    
+    public int getPreviousESC(){
+        return previousESC;
+    }
+    
+    public int getPreviousHP(){
+        return previousVida;
     }
     
     //Este metodo lo definira cada ficha por separado

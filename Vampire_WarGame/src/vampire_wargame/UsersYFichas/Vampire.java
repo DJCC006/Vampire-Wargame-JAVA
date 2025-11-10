@@ -40,4 +40,31 @@ public class Vampire extends Ficha{
         }
     }
     
+    
+    public void bajarseVida(){
+        super.ptVida--;
+    }
+    
+    
+    public void recibirAutodanio(int dmg){
+        if(super.ptEscudo>0){
+            if(super.ptEscudo>= dmg){
+                super.setPreviousESC(super.ptEscudo);
+                super.ptEscudo-= dmg;
+            }else{
+                int stack = dmg- super.ptEscudo;
+                super.setPreviousHP(super.ptEscudo);
+                super.ptEscudo=0;
+                
+                super.setPreviousHP(super.ptVida);
+                super.ptVida-=stack;
+            }
+        }else if(super.ptEscudo==0 && super.ptVida>0){
+            super.setPreviousESC(super.ptEscudo);
+            super.setPreviousHP(super.ptVida);
+            super.ptVida-=dmg;
+        }
+    }
+            
+    
 }
