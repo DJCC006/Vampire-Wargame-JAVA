@@ -76,6 +76,7 @@ public class ventanaRanking {
         }
         
         JTable tablaRanking = new JTable(data, columnas);
+        tablaRanking.getTableHeader().setReorderingAllowed(false);
         JScrollPane panelScroll = new JScrollPane(tablaRanking);
         panelScroll.setBounds(100, 80, 500, 300);
         

@@ -46,6 +46,7 @@ public class ventanaLogs {
         }
         
         JTable tablaLogs = new JTable( data, columnas);
+        tablaLogs.getTableHeader().setReorderingAllowed(false);
         JScrollPane panelScroll = new JScrollPane(tablaLogs);
         panelScroll.setBounds(100, 80, 500, 300);
         
