@@ -5,6 +5,7 @@
 package vampire_wargame.Tablero;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -18,8 +19,10 @@ import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import vampire_wargame.UsersYFichas.Ficha;
 import vampire_wargame.UsersYFichas.*;
 import vampire_wargame.menusyventanas.menuPrincipal;
@@ -303,14 +306,18 @@ public class generadorTablero extends JPanel implements MouseListener {
                    if(turnos==true){
                        if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                             System.out.println("Aqui hay una ficha!");
+                            
+                            //Se obtiene ficha on Hold
+                            
+                            
                             fichaOnHold=tableroLogico[filaSeleccionada][columnaSeleccionada];
                             previousX=filaSeleccionada;
                             previousY=columnaSeleccionada;
                             seleccion=true;
+                            //Colocar JOPTION PANE AQUI
                             
                             
-                            
-                            
+                            //considerar la posicion inicial 
                             boolean esTipoCorrecto = fichaOnHold!= null && typFichaActual == fichaOnHold.getTypeFicha();
                             
                             if(typFichaActual == typNecromancer && fichaOnHold!= null && fichaOnHold.getTypeFicha()== typZombie){
@@ -335,7 +342,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("CONTRARIO")){
                             //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
                             
-                             if(revYAtaque()){
+                             if(revYAtaque(e)){
                                  
                                  //eliminateZombies(turnos);//para que los zombies desaparezcan primero y luego el check de win si sea coeherente
                                  
@@ -402,7 +409,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                             
                        }else if(tableroLogico[filaSeleccionada][columnaSeleccionada].getBando().equals("JUGADOR")){
                            //CASE 2 DE DESELECCION: CUANDO SE CLICKEA FICHA DEL CONTRICANTE QUE NO TIENE TURNO
-                            if(revYAtaque()){
+                            if(revYAtaque(e)){
                                 
                                 //eliminateZombies(turnos);
                                 
@@ -443,9 +450,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                    
                    
                    
-                   
-                   
-                   
+                   //logica movmiento
                    //Seleccion de movimiento
                    for(Point p:casillasDisponibles){
                        int pX= p.x;
@@ -453,52 +458,7 @@ public class generadorTablero extends JPanel implements MouseListener {
                        
                        
                        //Spawner de zombie 
-                        if(fichaOnHold.getName().equals("NECROMANCER")){
-                            NecroMancer tempo = (NecroMancer) fichaOnHold;
-                            Object[] options= {"Si", "No"};
-                            if(tableroLogico[filaSeleccionada][columnaSeleccionada]==null){
-                                int choice= JOptionPane.showOptionDialog(this, "Generar un Zombie", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-                                
-                                if(choice==JOptionPane.YES_OPTION){
-                                    tempo.spawnearZombie(tableroLogico, filaSeleccionada, columnaSeleccionada,turnos);
-                                    msgSpawnZombie(pAnuncios, filaSeleccionada, columnaSeleccionada);
-                                    fichaOnHold=null;
-                                    seleccion=false;
-                                    //reseteo de seleccion
-                                    filaSeleccionada=-1;
-                                    columnaSeleccionada=-1;
-
-                                    ruletaGeneral.cleanLastSelected();
-                                    ruletaGeneral.cleanLastSelected();
-
-                                    casillasDisponibles.clear();
-                                    repaint();
-
-                                    //CAMBIO DE BANDOS
-                                    if(turnos==true){
-                                        turnos=false;
-                                        ruletaGeneral.setTurnos(turnos);
-                                        msgCambioTurnos(turnos, pTurnos);
-                                        //System.out.println("TURNO CONTRICANTE");
-
-                                    }else{
-                                        turnos=true;
-                                        ruletaGeneral.setTurnos(turnos);
-                                        msgCambioTurnos(turnos, pTurnos);
-                                        //System.out.println("TURNO JUGADOR");
-
-                                    }
-                                    
-                                    
-                                    break;
-                                    
-                                }else if(choice==JOptionPane.NO_OPTION){
-                                    System.out.println("XD");
-                                    
-                                }
-                                
-                            }
-                        }
+                       
                        
                        
                        if(filaSeleccionada==pX && columnaSeleccionada==pY){ //CONSIDERANDO SI YA ESTA EN EL CAMPO DE SELECCION
@@ -525,6 +485,61 @@ public class generadorTablero extends JPanel implements MouseListener {
                                movimientoValido=false;
                                System.out.println("NO SE PUEDE MOVER EL ZOMBIE");
                            }
+                           
+                           
+                            if(fichaOnHold.getName().equals("NECROMANCER")){
+                                NecroMancer tempo = (NecroMancer) fichaOnHold;
+                                Object[] options= {"Mover", "Generar Zombie", "Volver"};
+                                if(tableroLogico[filaSeleccionada][columnaSeleccionada]==null){
+                                    int choice= JOptionPane.showOptionDialog(this, "Accion a Realizar", "Accion", JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+
+                                    if(choice==JOptionPane.YES_OPTION){
+                                        //salta para seleccionar movimientos
+                                        if(!movimientoValido){
+                                            JOptionPane.showMessageDialog(this, "MOVIMIENTO VALIDO: 1 CASILLA");
+                                        }
+
+                                    }else if(choice==JOptionPane.NO_OPTION){
+                                        tempo.spawnearZombie(tableroLogico, filaSeleccionada, columnaSeleccionada,turnos);
+                                        msgSpawnZombie(pAnuncios, filaSeleccionada, columnaSeleccionada);
+                                        fichaOnHold=null;
+                                        seleccion=false;
+                                        //reseteo de seleccion
+                                        filaSeleccionada=-1;
+                                        columnaSeleccionada=-1;
+
+                                        ruletaGeneral.cleanLastSelected();
+                                        ruletaGeneral.cleanLastSelected();
+
+                                        casillasDisponibles.clear();
+                                        repaint();
+
+                                        //CAMBIO DE BANDOS
+                                        if(turnos==true){
+                                            turnos=false;
+                                            ruletaGeneral.setTurnos(turnos);
+                                            msgCambioTurnos(turnos, pTurnos);
+                                            //System.out.println("TURNO CONTRICANTE");
+
+                                        }else{
+                                            turnos=true;
+                                            ruletaGeneral.setTurnos(turnos);
+                                            msgCambioTurnos(turnos, pTurnos);
+                                            //System.out.println("TURNO JUGADOR");
+
+                                        }
+
+                                        break;
+
+                                    }else if(choice==JOptionPane.CANCEL_OPTION){
+                                        break;
+                                    }
+                                
+                            }
+                        }
+                           
+                           
+                           
                            
                            
                            System.out.println("Movimeinto valido: "+movimientoValido);
@@ -563,6 +578,8 @@ public class generadorTablero extends JPanel implements MouseListener {
                            } 
                        }
                    }
+                   
+                   //----------------Logica movimiento
                    
                    //CASO 3  DE DESELECCION: CUANDO SE CLICKEA EN UNA FICHA SIN NADA
                    //Buffer de en caso que se clickee en casilla donde no hay nada
@@ -868,7 +885,8 @@ public class generadorTablero extends JPanel implements MouseListener {
     }
     
     
-    private boolean revYAtaque(){
+    private boolean revYAtaque(MouseEvent e){
+        MouseEvent a=e;
         for(Point p:casillasDisponibles){
             int pX= p.x;
             int pY= p.y;
@@ -917,15 +935,89 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     int distanciaMax= Math.max(diffFila, diffColumna);
                                     System.out.println("ENTRA A COMPROBAR DISTANCIA");
                                     if(distanciaMax==2){
-                                        System.out.println("DETECTA DISTANCIA DE 2");
-                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                        msgAtaqueEspecial(pAnuncios,fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        boolean ataqueEspecial=true;
+                                        boolean ataqueNormal=false;
+                                        
+                                         Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        Object[] options= {"Ataque Especial", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                                
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                break;
+
+                                            }
+                                            
+                                        }
+                                        //mostrarMenuAtaque(e.getComponent(),e.getX(), e.getY(), fichaOnHold, atacado, ataqueNormal, ataqueEspecial);
+                                        
+//                                        System.out.println("DETECTA DISTANCIA DE 2");
+//                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                        msgAtaqueEspecial(pAnuncios,fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                         
                                         
                                     }else if(distanciaMax==1){
-                                        System.out.println("DETECTA DISTANCIA DE 1");
-                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                       msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        
+                                        boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
+                                        Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                               
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                break;
+
+                                            }
+                                            
+                                        }
+//                                        System.out.println("DETECTA DISTANCIA DE 1");
+//                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                       msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                        
                                         
                                     }
@@ -934,33 +1026,99 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     
                                     if(distanciaMax==1){
                                         Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                        if(atacado.getName().equals("VAMPIRO")){
-                                            int damage = fichaOnHold.getAtaqueB();
-                                            Vampire vampTemp = (Vampire)atacado;
-                                            vampTemp.recibirAutodanio(damage);
+                                        
+                                        boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
+                                       // Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                       
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
                                             
-                                        }else{
-                                            fichaOnHold.ataque(atacado);
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                                
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                break;
+
+                                            }
                                             
                                         }
                                        
-                                       
-                                       msgAtaqueBasic(pAnuncios, fichaOnHold,atacado);
+                                       //msgAtaqueBasic(pAnuncios, fichaOnHold,atacado);
                                         
                                     }else{
                                         return false;
                                     }
                                     
                                 }else{
-                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                    System.out.println("ATAQUE NORMAL NO NEGROMANCER");
+                                    Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    boolean ataqueEspecial=false;
+                                    boolean ataqueNormal=true;
+                                    //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                    
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                               
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                break;
+                                            }
+                                            
+                                        }
+                                    
+                                    
+                                    
+//                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                    System.out.println("ATAQUE NORMAL NO NEGROMANCER");
                                 }
                                 
                                 //REVISION DE ELIMINACION 
                                 if(tableroLogico[filaSeleccionada][columnaSeleccionada].getVida()<=0){
                                     Ficha fichaEliminated=tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                    
+                                    //check here
                                     msgEliminacion(pAnuncios, fichaOnHold, fichaEliminated);
                                     ImageIcon imagenEliminada = tableroLogico[filaSeleccionada][columnaSeleccionada].getImageIcon();
                                     JLabel fichaEliminada = new JLabel(imagenEliminada);
@@ -991,15 +1149,95 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     int distanciaMax= Math.max(diffFila, diffColumna);
                                     
                                     if(distanciaMax==2){
+                                        Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        boolean ataqueEspecial=true;
+                                        boolean ataqueNormal=false;
+                                        //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
                                         
-                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                        msgAtaqueEspecial(pAnuncios,fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                        Object[] options= {"Ataque Especial", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                               
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                System.out.println("XD");
+                                                break;
+                                            }
+                                            
+                                        }
+                                        
+                                        
+                                        
+                                        
+//                                        fichaOnHold.ataqueEspecial(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                        msgAtaqueEspecial(pAnuncios,fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                        
                                         
                                     }else if(distanciaMax==1){
-                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                        System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
-                                        msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                         boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
+                                        //Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                         Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                         
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                               
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                System.out.println("XD");
+                                                break;
+
+                                            }
+                                            
+                                        }
+                                        
+                                        
+//                                       fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                        System.out.println("NEGROMANCER Y SE HA REALIZADO ATAQUE NORMAL");
+//                                        msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                         
                                     }
                                 }else if(fichaOnHold.getName().equals("HOMBRE LOBO")){
@@ -1007,24 +1245,103 @@ public class generadorTablero extends JPanel implements MouseListener {
                                     
                                     if(distanciaMax==1){
                                         Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
-                                       if(atacado.getName().equals("VAMPIRO")){
-                                            int damage = fichaOnHold.getAtaqueB();
-                                            Vampire vampTemp = (Vampire)atacado;
-                                            vampTemp.recibirAutodanio(damage);
-                                        }else{
-                                            fichaOnHold.ataque(atacado);
+//                                       if(atacado.getName().equals("VAMPIRO")){
+//                                            int damage = fichaOnHold.getAtaqueB();
+//                                            Vampire vampTemp = (Vampire)atacado;
+//                                            vampTemp.recibirAutodanio(damage);
+//                                        }
+////                                       
+//                                       else{
+//                                            fichaOnHold.ataque(atacado);
+//                                        }
+                                       
+                                        boolean ataqueEspecial=false;
+                                        boolean ataqueNormal=true;
+                                        //Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                         //Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                         
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                                
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                System.out.println("XD");
+                                                break;
+
+                                            }
+                                            
                                         }
                                        
-                                       
-                                       msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                       msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                     }else{
                                         System.out.println("ATAQUE NO VALIDO PARA HOMBRE LOBO");
                                         return false;
                                     }
                                     
                                 }else{
-                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
-                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
+                                    
+                                     boolean ataqueEspecial=false;
+                                     boolean ataqueNormal=true;
+                                     //Ficha atacado =tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                      Ficha atacado = tableroLogico[filaSeleccionada][columnaSeleccionada];
+                                        Object[] options= {"Ataque Normal", "Volver"};
+                                        if(atacado!=null){
+                                            int choice= JOptionPane.showOptionDialog(this, "TIPO DE ATAQUE", "Accion", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                                            
+                                            if(choice==JOptionPane.YES_OPTION){
+                                               if(ataqueNormal){  
+                                                if(fichaOnHold.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                                                        int damage = fichaOnHold.getAtaqueB();
+                                                        Vampire vampTemp = (Vampire)atacado;
+                                                        vampTemp.recibirAutodanio(damage);
+                                                        msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);
+
+                                                    }else{
+                                                      fichaOnHold.ataque(atacado);
+                                                      msgAtaqueBasic(pAnuncios, fichaOnHold, atacado);  
+                                                    }
+
+
+                                                   
+                                                }
+
+                                                if(ataqueEspecial){
+                                                    fichaOnHold.ataqueEspecial(atacado);
+                                                    msgAtaqueEspecial(pAnuncios, fichaOnHold, atacado);
+                                                }
+                                                
+                                            }else if(choice==JOptionPane.NO_OPTION){
+                                                System.out.println("XD");
+                                                break;
+
+                                            }
+                                            
+                                        }
+                                    
+//                                    fichaOnHold.ataque(tableroLogico[filaSeleccionada][columnaSeleccionada]);
+//                                    msgAtaqueBasic(pAnuncios, fichaOnHold,tableroLogico[filaSeleccionada][columnaSeleccionada]);
                                 }
                                 
                                 //REVISION DE ELIMINACION 
@@ -1184,6 +1501,40 @@ public class generadorTablero extends JPanel implements MouseListener {
        repaint();
     }
     
+    
+    private void mostrarMenuAtaque(Component invoker, int x, int y, Ficha atacante, Ficha atacado, boolean isNormal, boolean isEspecial){
+        JPopupMenu menuAtaque = new JPopupMenu();
+        
+        if(isNormal){
+            JMenuItem normalItem = new JMenuItem("ATAQUE NORMAL");
+            normalItem.addActionListener(e -> {
+                if(atacante.getName().equals("HOMBRE LOBO")&& atacado.getName().equals("VAMPIRO")){
+                    int damage = fichaOnHold.getAtaqueB();
+                    Vampire vampTemp = (Vampire)atacado;
+                    vampTemp.recibirAutodanio(damage);
+                    msgAtaqueBasic(pAnuncios, atacante, atacado);
+
+                }else{
+                  atacante.ataque(atacado);
+                  msgAtaqueBasic(pAnuncios, atacante, atacado);  
+                }
+                
+               
+            });
+            menuAtaque.add(normalItem);
+        }
+        
+        if(isEspecial){
+            JMenuItem especialItem = new JMenuItem("ATAQUE ESPECIAL");
+            especialItem.addActionListener(e ->{
+                atacante.ataqueEspecial(atacado);
+                msgAtaqueEspecial(pAnuncios, atacante, atacado);
+            });
+            menuAtaque.add(especialItem);
+        }
+        menuAtaque.show(invoker, x, y);
+    }
+            
     
     
 }
