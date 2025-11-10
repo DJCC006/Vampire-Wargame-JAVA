@@ -46,6 +46,10 @@ public class Usuario {
         this.status=status;
     }
     
+    public void setPassword(String pass){
+        this.password=pass;
+    }
+    
     //Getters
     public String getUsername(){
         return username;

@@ -37,7 +37,7 @@ public class ventanaOponentes {
         JComboBox<String> Usernames = new JComboBox<>();
         Usernames.setBounds(100, 150, 200, 25);
         for(Usuario user: controladorUsuarios.getInstancia().getDBUsers() ){
-            if(!user.getUsername().equals(controladorLogged.getInstancia().getUsuarioLogged().getUsername())){
+            if(!user.getUsername().equals(controladorLogged.getInstancia().getUsuarioLogged().getUsername()) && user.getStatus()==true){
                 String names = user.getUsername();
                 Usernames.addItem(names);
             }

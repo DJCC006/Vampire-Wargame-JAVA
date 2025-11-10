@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import vampire_wargame.UsersYFichas.controladorLogged;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
 import vampire_wargame.menusyventanas.menuInicial;
@@ -40,8 +41,15 @@ public class menuPrincipal {
         btPlay.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              screen.dispose();
-              ventanaOponentes ventana = new ventanaOponentes();
+              
+              if(controladorUsuarios.getInstancia().getDBUsers().size()==1){
+                  JOptionPane.showMessageDialog(screen, "NECESITA POR LO MENOS DOS JUGADORES PARA CREAR UNA PARTIDA");
+              }else{
+                  screen.dispose();
+                ventanaOponentes ventana = new ventanaOponentes();
+              }
+              
+              
              
           }
                     

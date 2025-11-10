@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import vampire_wargame.UsersYFichas.Usuario;
+import vampire_wargame.UsersYFichas.controladorLogged;
 import vampire_wargame.UsersYFichas.controladorUsuarios;
 
 /**
@@ -61,18 +62,32 @@ public class ventanaNewAcc {
          btCreate.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              boolean revisionPass=checkPassword();
-              boolean revisionName=checkUsername(usertxt.getText());
-              if(revisionPass==true && revisionName==true){
-                   JOptionPane.showMessageDialog(screen, "Se ha creado la cuenta correctamente");
-                   char[] tempPass = passwordfield.getPassword();
-                   String passwordString = new String(tempPass);
-                   Usuario newUser= new Usuario(usertxt.getText(), passwordString);
-                   controladorUsuarios.getInstancia().getDBUsers().add(newUser);//agregado de nuevo usuario
-                   java.util.Arrays.fill(tempPass, '0');//limpieza de password
-                   usertxt.setText("");
-                   passwordfield.setText("");
+              
+              String txt=usertxt.getText();
+              char[] tempPas = passwordfield.getPassword();
+              String pssString = new String(tempPas);
+              
+              if(txt.equalsIgnoreCase("")|| pssString.equalsIgnoreCase("")){
+                  JOptionPane.showMessageDialog(screen, "PORFAVOR LLENAR TODOS LOS CAMPOS");
+              }else{
+                boolean revisionPass=checkPassword();
+                boolean revisionName=checkUsername(usertxt.getText());
+                if(revisionPass==true && revisionName==true){
+                     JOptionPane.showMessageDialog(screen, "Se ha creado la cuenta correctamente");
+                     char[] tempPass = passwordfield.getPassword();
+                     String passwordString = new String(tempPass);
+                     Usuario newUser= new Usuario(usertxt.getText(), passwordString);
+                     controladorUsuarios.getInstancia().getDBUsers().add(newUser);//agregado de nuevo usuario
+                     java.util.Arrays.fill(tempPass, '0');//limpieza de password
+                     usertxt.setText("");
+                     passwordfield.setText("");
+                     controladorLogged.getInstancia().setUsuarioLogged(newUser);
+                     menuPrincipal ventana = new menuPrincipal();
+                     screen.dispose();
+                }  
               }
+              
+              
           }
                     
         });

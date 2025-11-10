@@ -60,14 +60,22 @@ public class ventanaLogIn {
          btCreate.addActionListener(new ActionListener(){
           @Override 
           public void actionPerformed(ActionEvent e){
-              char[] tempPass = passwordfield.getPassword();
-              String passwordString = new String(tempPass);
-              boolean check = checkAccount(usertxt.getText(), passwordString);
-              if(check==true){
-                  java.util.Arrays.fill(tempPass, '0');//limpieza de password
-                  screen.dispose();
-                  menuPrincipal ventana = new menuPrincipal();
-              }
+              
+              String txt=usertxt.getText();
+              char[] tempPas = passwordfield.getPassword();
+              String pssString = new String(tempPas);
+              if(txt.equalsIgnoreCase("")|| pssString.equalsIgnoreCase("")){
+                  JOptionPane.showMessageDialog(screen, "PORFAVOR LLENAR TODOS LOS CAMPOS");
+              }else{
+                char[] tempPass = passwordfield.getPassword();
+                String passwordString = new String(tempPass);
+                boolean check = checkAccount(usertxt.getText(), passwordString);
+                if(check==true){
+                    java.util.Arrays.fill(tempPass, '0');//limpieza de password
+                    screen.dispose();
+                    menuPrincipal ventana = new menuPrincipal();
+                }
+              } 
           }
                     
         });
@@ -105,17 +113,20 @@ public class ventanaLogIn {
         String passwordString = new String(tempPass);
         for(int i=0; i<controladorUsuarios.getInstancia().getDBUsers().size(); i++){
             try{
-                Usuario user= controladorUsuarios.getInstancia().getDBUsers().get(i);
-                if(user.getUsername().equals(username)){
-                    if(user.getPassword().equals(passwordString)){
-                        JOptionPane.showMessageDialog(screen, "INICIO DE SESION EXITOSO");
-                        controladorLogged.getInstancia().setUsuarioLogged(user);
-                        System.out.println("Entra: "+user.getUsername());
-                        return true;
-                    }else{
-                        JOptionPane.showMessageDialog(screen, "CONTRASEÑA INCORRECTA");
-                        return false;
-                    }
+                //solo usuarios logged
+                if(controladorUsuarios.getInstancia().getDBUsers().get(i).getStatus()==true){
+                  Usuario user= controladorUsuarios.getInstancia().getDBUsers().get(i);
+                    if(user.getUsername().equals(username)){
+                        if(user.getPassword().equals(passwordString)){
+                            JOptionPane.showMessageDialog(screen, "INICIO DE SESION EXITOSO");
+                            controladorLogged.getInstancia().setUsuarioLogged(user);
+                            System.out.println("Entra: "+user.getUsername());
+                            return true;
+                        }else{
+                            JOptionPane.showMessageDialog(screen, "CONTRASEÑA INCORRECTA");
+                            return false;
+                        }
+                    }  
                 }
             }catch(NullPointerException e){
                 System.out.println("Exception por algo");
